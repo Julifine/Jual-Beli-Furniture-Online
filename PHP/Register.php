@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Julifine | Masuk</title>
+		<title>Julifine | Registrasi</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="google-signin-client_id" content="664499148646-6irjsskl9ph5eafhihqnb7dsgaf6a47f.apps.googleusercontent.com">
 		
@@ -12,7 +12,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="../CSS/login_styles.css">
+		<link rel="stylesheet" href="../CSS/register.css">
 		<link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
 		
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
@@ -36,12 +36,6 @@
 					</button>
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 				  <ul class="navbar-nav ml-auto">
-					<li class="nav-item active">
-						<span class="btn text-1">Sudah punya akun?</span>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#"><button class="masuk">DAFTAR</button></a>
-					</li>
 					<li class="nav-item dropdown">
 						<span class="nav-link language" data-toggle="dropdown" id="bahasa">
 							<img src="../Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
@@ -74,24 +68,28 @@
 			<div class="container justify-content-center">
 				<div class="jumbotron" style="margin-left: auto; margin-right: auto;">
 					<div class="row justify-content-center title-form" style="margin-top: 40px;">
-						<span>Login your account now</span>
+						<span>Register a new account now</span>
 					</div>
 					<div class="row justify-content-center" style="">
-						<div action="#" method="post" id="login_form">
+						<div action="#" method="post" onSubmit="validasi()">
 							<div class="field justify-content-center" style="width: 20vw">
-								<input type="email" name="email_field" id="email_field" placeholder="">
-								<label for="email_field" class="text-label label-placeholder" style="">Email</label>
+								<input type="username" name="username" id="username" placeholder="">
+								<label for="username" class="text-label label-placeholder" style="">Username</label>
+							</div>
+							<div class="field justify-content-center" style="width: 20vw">
+								<input type="email" name="email" id="email" placeholder="">
+								<label for="email" class="text-label label-placeholder" style="">Email</label>
 							</div>
 							<div class="field" style="">
-								<input type="password" name="pass_field" id="pass_field" placeholder="">
-								<label for="pass_field" class="text-label label-placeholder" style="">Password</label>
-								<span toggle="#pass_field" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
+								<input type="password" name="password" id="password" placeholder="">
+								<label for="password" class="text-label label-placeholder" style="">Password</label>
+								<span toggle="#password" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
 							</div>
 							<div class="field-forgot" style="">
 								<a href="#" style="color: #888;"><span style="font-size: 14px;">Forgot password?</span></a>
 							</div>
 							<div class="field" style="margin-top: 80px">
-								<input type="submit" onClick="login()" name="submit" value="LOG IN" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-razer">
+								<input type="submit" class="tombol" name="submit" value="START" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-razer">
 							</div>
 						</div>
 					</div>
@@ -108,9 +106,7 @@
 					</div>
 					<div class="row" style="margin-top: 40px;padding-left: 18%;padding-right: 18%">
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<!--<a href="#" onClick="signInWithGoogle()">
-								<img src="../Assets/google.svg" alt="">
-							</a>-->
+						
 							<input type="button" id="btn-google" onClick="signInWithGoogle()">
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
@@ -125,7 +121,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px">
-						<input class="masuk" type="button" value="REGISTER A NEW ACCOUNT" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
+						<input class="masuk" type="button" value="ALREADY HAVE AN ACCOUNT?" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
 					</div>
 				</div>
 				<div style="margin-top: 60px;">
@@ -140,23 +136,16 @@
 		</section>		
 		<script src="../js/auth.js"></script>
 		<script>
-			firebase.auth().onAuthStateChanged(function(user){
-				if	(user){
-					window.location.href = "homeuser.php";
-				}
-			});
-		</script>
-		<script>
-			function onSignIn(googleUser) {
-			  /*var profile = googleUser.getBasicProfile();
-			  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-			  console.log('Name: ' + profile.getName());
-			  console.log('Image URL: ' + profile.getImageUrl());
-			  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.*/
-				if	(googleUser){
-					window.location.href = "homeuser.php";
-				}
-			}
+			function validasi(){
+		var username = document.getElementById("username").value;
+		var email = document.getElementById("email").value;
+		var password = document.getElementById("password").value;
+		if (nama != "" && email!="" && alamat !="") {
+			return true;
+		}else{
+			alert('Anda harus mengisi data dengan lengkap !');
+		}
+}
 		</script>
 	</body>
 	<script>

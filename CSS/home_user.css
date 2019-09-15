@@ -1,0 +1,12 @@
+/* CSS Document */
+
+html *{
+	font-family: 'Saira', sans-serif;
+}
+
+#profilePicture{
+	justify-content: center;
+	border-radius: 50%;
+	width: 50%;
+	height: 50%
+}
