@@ -17,6 +17,9 @@
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-firestore.js"></script>
+		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
 		
 		<link rel="shortcut icon" href="../Assets/logo.png">
 		
@@ -30,8 +33,8 @@
 					<img id="profilePicture" src="" >	
 				</div>
 				<div style="">													
-					<span style="margin-top: 20px;font-size: 18px">Email: <span id="useremail">tes</span></span>
-					<h3 style="margin-top: 10px;font-size: 18px">UID: <span id="useruid">tes</span></h3>
+					<span style="margin-top: 20px;font-size: 18px">Email: <span id="useremail"></span></span>
+					<h3 style="margin-top: 10px;font-size: 18px">UID: <span id="useruid"></span></h3>
 				</div>
 				<input type="submit" onClick="logout()" name="submit" value="LOG OUT" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none;background-color: white;margin-top: 20px;">
 			</div>
@@ -46,6 +49,14 @@
 					var email = user.email;
 					var UID = user.uid;
 					var pp = user.photoURL;
+					
+					if(pp == null){
+						pp = "../Assets/user-vector.svg";
+					}
+					
+					if(email == null){
+						email = "-";
+					}
 					
 					document.getElementById("useremail").innerHTML = email;
 					document.getElementById("useruid").innerHTML = UID;

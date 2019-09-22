@@ -19,7 +19,11 @@
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-firestore.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
 		
+		
+		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 		<link rel="shortcut icon" href="../Assets/logo.png">
 		
 	</head>
@@ -37,10 +41,10 @@
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 				  <ul class="navbar-nav ml-auto">
 					<li class="nav-item active">
-						<span class="btn text-1">Sudah punya akun?</span>
+						<span id="doesnt" class="btn text-1">Doesn't have an account?</span>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#"><button class="masuk">DAFTAR</button></a>
+						<a id="btn-register" class="nav-link" href="#"><button class="masuk">REGISTER</button></a>
 					</li>
 					<li class="nav-item dropdown">
 						<span class="nav-link language" data-toggle="dropdown" id="bahasa">
@@ -72,13 +76,13 @@
 			  </div>
 			</nav>
 			<div class="container justify-content-center">
-				<div class="jumbotron" style="margin-left: auto; margin-right: auto;">
+				<div id="jumbo-login" class="jumbotron" style="margin-left: auto; margin-right: auto;">
 					<div class="row justify-content-center title-form" style="margin-top: 40px;">
 						<span>Login your account now</span>
 					</div>
 					<div class="row justify-content-center" style="">
-						<div action="#" method="post" id="login_form">
-							<div class="field justify-content-center" style="width: 20vw">
+						<div action="#" method="post" id="login_form" style="width: 100%;padding-left: 10%;padding-right: 10%">
+							<div class="field justify-content-center" style="">
 								<input type="email" name="email_field" id="email_field" placeholder="">
 								<label for="email_field" class="text-label label-placeholder" style="">Email</label>
 							</div>
@@ -108,32 +112,60 @@
 					</div>
 					<div class="row" style="margin-top: 40px;padding-left: 18%;padding-right: 18%">
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<!--<a href="#" onClick="signInWithGoogle()">
+							<a href="javascript:signInWithGoogle()" id="btn-google">
 								<img src="../Assets/google.svg" alt="">
-							</a>-->
-							<input type="button" id="btn-google" onClick="signInWithGoogle()">
+							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="">
+							<a href="javascript:signInWithFacebook()">
 								<img src="../Assets/fb.svg" alt="">
 							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="">
+							<a href="#phoneModal" role="button" class="" data-toggle="modal">
 								<img src="../Assets/hp.svg" alt="">
 							</a>
+							<div id="phoneModal" class="modal fade">
+								<div class="modal-dialog" style="">
+									<div class="modal-content">
+										<div id="firebaseui-auth-container">
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px">
 						<input class="masuk" type="button" value="REGISTER A NEW ACCOUNT" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
 					</div>
 				</div>
-				<div style="margin-top: 60px;">
+				<div class="container" h-100 d-flex>
+					<div id="jumbo-type" class="jumbotron" style="margin-left: auto; margin-right: auto;height: 100%;transform: translateY(50%);display: none">
+						<div class="row justify-content-center title-form" style="margin-top: 40px;">
+							<span>Select your account type</span>
+						</div>
+						<div class="row justify-content-center title-form" style="">
+							<form action="#" method="post" id="login_form" style="width: 100%">
+								<div class="field" style="margin-top: 20px">
+									<select id="account_type" class="select-type">
+										<option value="" disabled>Choose your account type</option>
+										<option value="buyer">Buyer</option>
+										<option value="seller">Seller</option>
+									</select>
+								</div>
+								<div class="field" style="margin-top: 120px;margin-bottom: 40px">
+									<input type="submit" onClick="" name="submit" value="DONE" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-type">
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="container" style="bottom: 0;position: absolute;height: 8%">
 					<div class="row justify-content-center">
 						<a class="footer" href="#">Julifine.com</a>
 					</div>
 					<div class="row justify-content-center">
-						<span class="footer-text">Copyright © 2019 Julifine Co. All rights reserved. <a href="">FAQ</a> | <a href="">Legal Terms</a> | <a href="">Privacy Policy</a> | <a href="">Cookie Policy</a></span>
+						<span class="footer-text">Copyright © 2019 Julifine Co. All rights reserved.</span>
 					</div>
 				</div>
 			</div>
@@ -142,21 +174,37 @@
 		<script>
 			firebase.auth().onAuthStateChanged(function(user){
 				if	(user){
-					window.location.href = "homeuser.php";
+					var email = user.email;
+					var dn = user.displayName;
+					var UID = user.uid;
+					var pp = user.photoURL;
+					var phoneNumber = user.phoneNumber;
+					firebase.database().ref("users").once('value', function(snapshot) {
+
+					var status = false;
+					  snapshot.forEach(function(childSnapshot) {
+						var childKey = childSnapshot.key;
+						var childData = childSnapshot.val();
+						  console.log(childKey.length);
+					  });
+						var key = Object.keys(snapshot.val());
+						for(i=0;i<key.length;i++){
+							console.log(UID+": "+key[i]);
+							if(UID == key[i]){
+								status = false;
+								break;
+							}else{
+								status = true;
+							}
+						}
+						if(status == false){
+							window.location.href = "homeuser.php";
+						}else{
+							window.location.href = "select_account.php";
+						}
+					});
 				}
 			});
-		</script>
-		<script>
-			function onSignIn(googleUser) {
-			  /*var profile = googleUser.getBasicProfile();
-			  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-			  console.log('Name: ' + profile.getName());
-			  console.log('Image URL: ' + profile.getImageUrl());
-			  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.*/
-				if	(googleUser){
-					window.location.href = "homeuser.php";
-				}
-			}
 		</script>
 	</body>
 	<script>
@@ -169,5 +217,9 @@
 				input.attr("type", "password");
 			}
 		});
+		
+		function clearPhone(){
+			document.getElementById("phoneNumber").value = "";
+		}
 	</script>
 </html>

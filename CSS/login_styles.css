@@ -4,6 +4,10 @@ html *{
 	font-family: 'Saira', sans-serif;
 }
 
+html, body {
+    height: 100%;
+}
+
 .dropdown-menu{
 	margin-top: 8px;
 	margin-right: -64px!important;
@@ -146,6 +150,21 @@ html *{
 		border-bottom: 1px white solid;
 		font-size: 24px;
 		width:100%;
+	}
+	
+	.select-type{
+		width: 100%;
+		float: left;
+		padding: 10px 0px;
+		background: url(../Assets/chevron-down.svg) no-repeat right transparent;
+		color: white;
+		font-size: 16px;
+		border: none;
+		border-bottom: 2px white solid;
+		-moz-appearance:none;
+	}
+	.select-type:hover{
+		cursor: pointer
 	}
 }
 
@@ -469,5 +488,12 @@ input:focus {
 	.footer:hover{
 		color: #CCCCCC;
 		text-decoration: none;
+	}
+	
+	.modal-dialog {
+	  	position: absolute;
+	  	top: 50%;
+	  	left: 50%;
+	  	transform: translate(-50%, -50%) !important;
 	}
 }
