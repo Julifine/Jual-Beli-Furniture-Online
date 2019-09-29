@@ -136,28 +136,7 @@
 						</div>
 					</div>
 					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px">
-						<input class="masuk" type="button" value="REGISTER A NEW ACCOUNT" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
-					</div>
-				</div>
-				<div class="container" h-100 d-flex>
-					<div id="jumbo-type" class="jumbotron" style="margin-left: auto; margin-right: auto;height: 100%;transform: translateY(50%);display: none">
-						<div class="row justify-content-center title-form" style="margin-top: 40px;">
-							<span>Select your account type</span>
-						</div>
-						<div class="row justify-content-center title-form" style="">
-							<form action="#" method="post" id="login_form" style="width: 100%">
-								<div class="field" style="margin-top: 20px">
-									<select id="account_type" class="select-type">
-										<option value="" disabled>Choose your account type</option>
-										<option value="buyer">Buyer</option>
-										<option value="seller">Seller</option>
-									</select>
-								</div>
-								<div class="field" style="margin-top: 120px;margin-bottom: 40px">
-									<input type="submit" onClick="" name="submit" value="DONE" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-type">
-								</div>
-							</form>
-						</div>
+						<input onClick="toRegister()" class="masuk" type="button" value="REGISTER A NEW ACCOUNT" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
 					</div>
 				</div>
 				<div class="container" style="bottom: 0;position: absolute;height: 8%">
@@ -205,6 +184,10 @@
 					});
 				}
 			});
+			
+			function toRegister(){
+				window.location.href = "Register.php";
+			}
 		</script>
 	</body>
 	<script>

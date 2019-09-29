@@ -142,10 +142,10 @@
 								UID = "-";
 							}
 							if (pp==null){
-								pp = "";
+								pp = "-";
 							}
 							if (phoneNumber == null){
-								phoneNumber = "";
+								phoneNumber = "-";
 							}
 							$(document).ready(function() {
 								$("#btn-type").click(function(){

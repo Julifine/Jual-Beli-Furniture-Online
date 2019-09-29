@@ -19,6 +19,11 @@
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-firestore.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
+		
+		
+		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 		
 		<link rel="shortcut icon" href="../Assets/logo.png">
 		
@@ -37,6 +42,13 @@
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 				  <ul class="navbar-nav ml-auto">
 					<li class="nav-item dropdown">
+						<li class="nav-item active">
+							<span id="doesnt" class="btn text-1">Already have an account?</span>
+						</li>
+						<li class="nav-item">
+							<a id="btn-register" class="nav-link" href="#"><button class="masuk">REGISTER</button></a>
+						</li>
+						<li class="nav-item dropdown">
 						<span class="nav-link language" data-toggle="dropdown" id="bahasa">
 							<img src="../Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
 						</span>
@@ -71,27 +83,31 @@
 						<span>Register a new account now</span>
 					</div>
 					<div class="row justify-content-center" style="">
-						<div action="#" method="post" onSubmit="validasi()">
+						<form id="signUpForm" action="#" method="post">
 							<div class="field justify-content-center" style="width: 20vw">
 								<input type="username" name="username" id="username" placeholder="">
 								<label for="username" class="text-label label-placeholder" style="">Username</label>
 							</div>
 							<div class="field justify-content-center" style="width: 20vw">
-								<input type="email" name="email" id="email" placeholder="">
-								<label for="email" class="text-label label-placeholder" style="">Email</label>
+								<input type="email" name="email" id="signup-email" placeholder="">
+								<label for="signup-email" class="text-label label-placeholder" style="">Email</label>
 							</div>
-							<div class="field" style="">
+							<div class="field justify-content-center" style="">
+								<select id="account_type" class="select-type">
+									<option value="" disabled selected>Choose your account type</option>
+									<option value="buyer">Buyer</option>
+									<option value="seller">Seller</option>
+								</select>
+							</div>
+							<div class="field" style="margin-top: 130px">
 								<input type="password" name="password" id="password" placeholder="">
 								<label for="password" class="text-label label-placeholder" style="">Password</label>
 								<span toggle="#password" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
 							</div>
-							<div class="field-forgot" style="">
-								<a href="#" style="color: #888;"><span style="font-size: 14px;">Forgot password?</span></a>
-							</div>
-							<div class="field" style="margin-top: 80px">
+							<div class="field" style="margin-top: 80px;">
 								<input type="submit" class="tombol" name="submit" value="START" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-razer">
 							</div>
-						</div>
+						</form>
 					</div>
 					<div class="row">
 						<div class="col-4 separator-left" style="">
@@ -106,22 +122,31 @@
 					</div>
 					<div class="row" style="margin-top: 40px;padding-left: 18%;padding-right: 18%">
 						<div class="col-4" style="text-align: center;padding: 0px">
-						
-							<input type="button" id="btn-google" onClick="signInWithGoogle()">
+							<a href="javascript:signInWithGoogle()" id="btn-google">
+								<img src="../Assets/google.svg" alt="">
+							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="">
+							<a href="javascript:signInWithFacebook()">
 								<img src="../Assets/fb.svg" alt="">
 							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="">
+							<a href="#phoneModal" role="button" class="" data-toggle="modal">
 								<img src="../Assets/hp.svg" alt="">
 							</a>
+							<div id="phoneModal" class="modal fade">
+								<div class="modal-dialog" style="">
+									<div class="modal-content">
+										<div id="firebaseui-auth-container">
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px">
-						<input class="masuk" type="button" value="ALREADY HAVE AN ACCOUNT?" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
+					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px;margin-bottom: 40px">
+						<input onClick="toLogin()" class="masuk" type="button" value="ALREADY HAVE AN ACCOUNT?" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
 					</div>
 				</div>
 				<div style="margin-top: 60px;">
@@ -137,15 +162,25 @@
 		<script src="../js/auth.js"></script>
 		<script>
 			function validasi(){
-		var username = document.getElementById("username").value;
-		var email = document.getElementById("email").value;
-		var password = document.getElementById("password").value;
-		if (nama != "" && email!="" && alamat !="") {
-			return true;
-		}else{
-			alert('Anda harus mengisi data dengan lengkap !');
-		}
-}
+				var username = document.getElementById("username").value;
+				var email = document.getElementById("email").value;
+				var password = document.getElementById("password").value;
+				if (nama != "" && email!="" && alamat !="") {
+					return true;
+				}else{
+					alert('Anda harus mengisi data dengan lengkap !');
+				}
+			}
+			
+			function toLogin(){
+				window.location.href = "Login.php";
+			}
+			
+			firebase.auth().onAuthStateChanged(function(user){
+				if	(user){
+					window.location.href = "homeuser.php";
+				}
+			});
 		</script>
 	</body>
 	<script>

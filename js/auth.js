@@ -56,7 +56,6 @@ function signInWithFacebook(){
 		var uid = user.uid;
 		var imageUrl = user.photoURL;
 		
-		insertData(email,displayName,uid,imageUrl);
 	}).catch(function(error) {
 	  // Handle Errors here.
 	  var errorCode = error.code;
@@ -156,14 +155,55 @@ var uiConfig = {
 	}
 };
 
+const signUpForm = document.querySelector('#signUpForm');
+signUpForm.addEventListener('submit',(e) => {
+	e.preventDefault();
+	
+	signup_email = signUpForm['signup-email'].value;
+	signup_password = signUpForm['password'].value;
+	signup_username = signUpForm['username'].value;
+	signup_account_type = signUpForm['account_type'].value;
+	
+	firebase.auth().createUserWithEmailAndPassword(signup_email,signup_password).then(cred => {
+		console.log(cred);
+		var pp;
+		var pn;
+		if (cred.user.photoURL==null){
+			pp = "-";
+		}
+		if (cred.user.phoneNumber == null){
+			pn = "-";
+		}
+		var firebaseRef = firebase.database().ref("users/" + cred.user.uid);
+		firebaseRef.set({
+			email: cred.user.email,
+			displayName: signup_username,
+			uid:cred.user.uid,
+			imageUrl: pp,
+			phoneNumber: pn,
+			type: signup_account_type
+		});
+		
+	}).catch(function(error) {
+	  // Handle Errors here.
+	  var errorCode = error.code;
+	  var errorMessage = error.message;
+	  // The email of the user's account used.
+	  var email = error.email;
+	  // The firebase.auth.AuthCredential type that was used.
+	  var credential = error.credential;
+	  window.alert("Error: "+errorMessage);
+	});
+	
+});
+
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container',uiConfig);
 
 function logout(){
 	firebase.auth().signOut().then(function() {
-  // Sign-out successful.
-}).catch(function(error) {
-  // An error happened.
-});
-
+	  // Sign-out successful.
+	}).catch(function(error) {
+	  // An error happened.
+	});
 }
