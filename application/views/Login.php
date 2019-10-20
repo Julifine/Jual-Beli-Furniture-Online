@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Julifine | Masuk</title>
+		<title>Julifine | Login</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="google-signin-client_id" content="664499148646-6irjsskl9ph5eafhihqnb7dsgaf6a47f.apps.googleusercontent.com">
 		
@@ -12,19 +12,18 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="<?= base_url(); ?>css/login_styles.css">
+		<link rel="stylesheet" href="<?= base_url();?>/CSS/login_styles.css">
 		<link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
 		
+		<script src="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.js"></script>
+		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.css" />
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-firestore.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
-		<script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
 		
-		
-		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-		<link rel="shortcut icon" href="<?= base_url(); ?>assets/logo.png">
+		<link rel="shortcut icon" href="<?= base_url();?>/Assets/logo.png">
 		
 	</head>
 
@@ -32,9 +31,9 @@
 		<section>
 			<nav class="navbar navbar-expand-lg navbar-dark static-top bg-topbar">
 			  <div class="container">
-				<a class="navbar-brand" href="#">
-					  <img src="<?= base_url(); ?>assets/logo-text.png" alt="">
-					</a>
+				<a class="navbar-brand" href="<?= base_url(); ?>">
+					<img src="<?= base_url();?>/Assets/logo-text-landscape.png" alt="">
+				</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 					  <span class="navbar-toggler-icon"></span>
 					</button>
@@ -44,11 +43,11 @@
 						<span id="doesnt" class="btn text-1">Doesn't have an account?</span>
 					</li>
 					<li class="nav-item">
-						<a id="btn-register" class="nav-link" href="#"><button class="masuk">REGISTER</button></a>
+						<a id="btn-register" class="nav-link" href="javascript:toRegister()"><button class="masuk">REGISTER</button></a>
 					</li>
 					<li class="nav-item dropdown">
 						<span class="nav-link language" data-toggle="dropdown" id="bahasa">
-							<img src="<?= base_url(); ?>assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
+							<img src="<?= base_url();?>/Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
 						</span>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 							<a href="" class="dropdown-item" id="highlighted">English</a>
@@ -81,7 +80,7 @@
 						<span>Login your account now</span>
 					</div>
 					<div class="row justify-content-center" style="">
-						<div action="#" method="post" id="login_form" style="width: 100%;padding-left: 10%;padding-right: 10%">
+						<div action="#" method="post" id="signUpFormUser" style="width: 100%;padding-left: 10%;padding-right: 10%">
 							<div class="field justify-content-center" style="">
 								<input type="email" name="email_field" id="email_field" placeholder="">
 								<label for="email_field" class="text-label label-placeholder" style="">Email</label>
@@ -112,18 +111,18 @@
 					</div>
 					<div class="row" style="margin-top: 40px;padding-left: 18%;padding-right: 18%">
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="javascript:signInWithGoogle()" id="btn-google">
-								<img src="<?= base_url(); ?>assets/google.svg" alt="">
+							<a href="javascript:signInWithGoogle('<?= base_url(); ?>')" id="btn-google">
+								<img src="<?= base_url();?>/Assets/google.svg" alt="">
 							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="javascript:signInWithFacebook()">
-								<img src="<?= base_url(); ?>assets/fb.svg" alt="">
+							<a href="javascript:signInWithFacebook('<?= base_url(); ?>')">
+								<img src="<?= base_url();?>/Assets/fb.svg" alt="">
 							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
 							<a href="#phoneModal" role="button" class="" data-toggle="modal">
-								<img src="<?= base_url(); ?>assets/hp.svg" alt="">
+								<img src="<?= base_url();?>/Assets/hp.svg" alt="">
 							</a>
 							<div id="phoneModal" class="modal fade">
 								<div class="modal-dialog" style="">
@@ -135,29 +134,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px">
-						<input class="masuk" type="button" value="REGISTER A NEW ACCOUNT" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
-					</div>
-				</div>
-				<div class="container" h-100 d-flex>
-					<div id="jumbo-type" class="jumbotron" style="margin-left: auto; margin-right: auto;height: 100%;transform: translateY(50%);display: none">
-						<div class="row justify-content-center title-form" style="margin-top: 40px;">
-							<span>Select your account type</span>
-						</div>
-						<div class="row justify-content-center title-form" style="">
-							<form action="#" method="post" id="login_form" style="width: 100%">
-								<div class="field" style="margin-top: 20px">
-									<select id="account_type" class="select-type">
-										<option value="" disabled>Choose your account type</option>
-										<option value="buyer">Buyer</option>
-										<option value="seller">Seller</option>
-									</select>
-								</div>
-								<div class="field" style="margin-top: 120px;margin-bottom: 40px">
-									<input type="submit" onClick="" name="submit" value="DONE" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-type">
-								</div>
-							</form>
-						</div>
+					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px;margin-bottom: 40px">
+						<input onClick="toRegister()" class="masuk" type="button" value="REGISTER A NEW ACCOUNT" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
 					</div>
 				</div>
 				<div class="container" style="bottom: 0;position: absolute;height: 8%">
@@ -170,8 +148,10 @@
 				</div>
 			</div>
 		</section>		
-		<script src="<?= base_url(); ?>/js/auth.js"></script>
+		<script>var base_url = '<?php echo base_url(); ?>';</script>
+		<script src="<?= base_url(); ?>js/auth.js"></script>
 		<script>
+			
 			firebase.auth().onAuthStateChanged(function(user){
 				if	(user){
 					var email = user.email;
@@ -180,31 +160,20 @@
 					var pp = user.photoURL;
 					var phoneNumber = user.phoneNumber;
 					firebase.database().ref("users").once('value', function(snapshot) {
-
-					var status = false;
-					  snapshot.forEach(function(childSnapshot) {
-						var childKey = childSnapshot.key;
-						var childData = childSnapshot.val();
-						  console.log(childKey.length);
-					  });
-						var key = Object.keys(snapshot.val());
-						for(i=0;i<key.length;i++){
-							console.log(UID+": "+key[i]);
-							if(UID == key[i]){
-								status = false;
-								break;
-							}else{
-								status = true;
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+							if (UID == childKey){
+								window.location.href = "<?= base_url(); ?>Home";
 							}
-						}
-						if(status == false){
-							window.location.href = "homeuser.php";
-						}else{
-							window.location.href = "select_account.php";
-						}
+						});
 					});
 				}
 			});
+			
+			function toRegister(){
+				window.location.href = "<?= base_url(); ?>Landing/Register";
+			}
 		</script>
 	</body>
 	<script>

@@ -4,6 +4,10 @@ html *{
 	font-family: 'Saira', sans-serif;
 }
 
+html, body {
+    height: 100%;
+}
+
 .dropdown-menu{
 	margin-top: 8px;
 	margin-right: -64px!important;
@@ -94,7 +98,7 @@ html *{
 		background-image:url(../Assets/background-login.png);
 		background-size: cover;
 		background-attachment: fixed;
-		min-height: 100vh
+		min-height: 104vh
 	}
 	
 	.select-type{

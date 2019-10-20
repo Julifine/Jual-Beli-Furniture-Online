@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Julifine | Registrasi</title>
+		<title>Julifine | Register</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="google-signin-client_id" content="664499148646-6irjsskl9ph5eafhihqnb7dsgaf6a47f.apps.googleusercontent.com">
 		
@@ -12,15 +12,20 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="../CSS/register.css">
+		<link rel="stylesheet" href="<?= base_url();?>/CSS/register.css">
 		<link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
 		
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-firestore.js"></script>
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
 		
-		<link rel="shortcut icon" href="../Assets/logo.png">
+		
+		<script src="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.js"></script>
+		<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.css" />
+		
+		<link rel="shortcut icon" href="<?= base_url();?>/Assets/logo.png">
 		
 	</head>
 
@@ -28,8 +33,8 @@
 		<section>
 			<nav class="navbar navbar-expand-lg navbar-dark static-top bg-topbar">
 			  <div class="container">
-				<a class="navbar-brand" href="#">
-					  <img src="../Assets/logo-text.png" alt="">
+				<a class="navbar-brand" href="<?= base_url(); ?>Landing">
+					  <img src="<?= base_url();?>/Assets/logo-text-landscape.png" alt="">
 					</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 					  <span class="navbar-toggler-icon"></span>
@@ -37,8 +42,15 @@
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 				  <ul class="navbar-nav ml-auto">
 					<li class="nav-item dropdown">
+						<li class="nav-item active">
+							<span id="doesnt" class="btn text-1">Already have an account?</span>
+						</li>
+						<li class="nav-item">
+							<a id="btn-register" class="nav-link" href="javascript:toLogin()"><button class="masuk">LOGIN</button></a>
+						</li>
+						<li class="nav-item dropdown">
 						<span class="nav-link language" data-toggle="dropdown" id="bahasa">
-							<img src="../Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
+							<img src="<?= base_url();?>/Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
 						</span>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 							<a href="" class="dropdown-item" id="highlighted">English</a>
@@ -71,27 +83,24 @@
 						<span>Register a new account now</span>
 					</div>
 					<div class="row justify-content-center" style="">
-						<div action="#" method="post" onSubmit="validasi()">
-							<div class="field justify-content-center" style="width: 20vw">
+						<form id="signUpFormUser" action="#" method="post" style="width: 100%;padding-left: 10%;padding-right: 10%">
+							<div class="field justify-content-center">
 								<input type="username" name="username" id="username" placeholder="">
 								<label for="username" class="text-label label-placeholder" style="">Username</label>
 							</div>
-							<div class="field justify-content-center" style="width: 20vw">
-								<input type="email" name="email" id="email" placeholder="">
-								<label for="email" class="text-label label-placeholder" style="">Email</label>
+							<div class="field justify-content-center">
+								<input type="email" name="email" id="email_field" placeholder="">
+								<label for="email_field" class="text-label label-placeholder" style="">Email</label>
 							</div>
-							<div class="field" style="">
-								<input type="password" name="password" id="password" placeholder="">
-								<label for="password" class="text-label label-placeholder" style="">Password</label>
-								<span toggle="#password" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
+							<div class="field" style="margin-top: 60px">
+								<input type="password" name="password" id="pass_field" placeholder="">
+								<label for="pass_field" class="text-label label-placeholder" style="">Password</label>
+								<span toggle="#pass_field" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
 							</div>
-							<div class="field-forgot" style="">
-								<a href="#" style="color: #888;"><span style="font-size: 14px;">Forgot password?</span></a>
-							</div>
-							<div class="field" style="margin-top: 80px">
+							<div class="field" style="margin-top: 80px;">
 								<input type="submit" class="tombol" name="submit" value="START" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-razer">
 							</div>
-						</div>
+						</form>
 					</div>
 					<div class="row">
 						<div class="col-4 separator-left" style="">
@@ -106,22 +115,31 @@
 					</div>
 					<div class="row" style="margin-top: 40px;padding-left: 18%;padding-right: 18%">
 						<div class="col-4" style="text-align: center;padding: 0px">
-						
-							<input type="button" id="btn-google" onClick="signInWithGoogle()">
-						</div>
-						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="">
-								<img src="../Assets/fb.svg" alt="">
+							<a href="javascript:signInWithGoogle('<?= base_url(); ?>')" id="btn-google">
+								<img src="<?= base_url();?>/Assets/google.svg" alt="">
 							</a>
 						</div>
 						<div class="col-4" style="text-align: center;padding: 0px">
-							<a href="">
-								<img src="../Assets/hp.svg" alt="">
+							<a href="javascript:signInWithFacebook('<?= base_url(); ?>')">
+								<img src="<?= base_url();?>/Assets/fb.svg" alt="">
 							</a>
+						</div>
+						<div class="col-4" style="text-align: center;padding: 0px">
+							<a href="#phoneModa" role="button" class="" data-toggle="modal">
+								<img src="<?= base_url();?>/Assets/hp.svg" alt="">
+							</a>
+							<div id="phoneModa" class="modal fade">
+								<div class="modal-dialog" style="">
+									<div class="modal-content">
+										<div id="firebaseui-auth-container">
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px">
-						<input class="masuk" type="button" value="ALREADY HAVE AN ACCOUNT?" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
+					<div class="row justify-content-center" style="padding-left: 10%;padding-right: 10%;margin-top: 40px;margin-bottom: 40px">
+						<input onClick="toLogin()" class="masuk" type="button" value="ALREADY HAVE AN ACCOUNT?" name="register" id="" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;">
 					</div>
 				</div>
 				<div style="margin-top: 60px;">
@@ -129,23 +147,51 @@
 						<a class="footer" href="#">Julifine.com</a>
 					</div>
 					<div class="row justify-content-center">
-						<span class="footer-text">Copyright © 2019 Julifine Co. All rights reserved. <a href="">FAQ</a> | <a href="">Legal Terms</a> | <a href="">Privacy Policy</a> | <a href="">Cookie Policy</a></span>
+						<span class="footer-text">Copyright © 2019 Julifine Co. All rights reserved.</span>
 					</div>
 				</div>
 			</div>
 		</section>		
-		<script src="../js/auth.js"></script>
+		<script>var base_url = '<?php echo base_url(); ?>';</script>
+		<script src="<?= base_url(); ?>/js/auth.js"></script>
 		<script>
 			function validasi(){
-		var username = document.getElementById("username").value;
-		var email = document.getElementById("email").value;
-		var password = document.getElementById("password").value;
-		if (nama != "" && email!="" && alamat !="") {
-			return true;
-		}else{
-			alert('Anda harus mengisi data dengan lengkap !');
-		}
-}
+				var username = document.getElementById("username").value;
+				var email = document.getElementById("email").value;
+				var password = document.getElementById("password").value;
+				if (nama != "" && email!="" && alamat !="") {
+					return true;
+				}else{
+					alert('Anda harus mengisi data dengan lengkap !');
+				}
+			}
+			
+			function toLogin(){
+				window.location.href = "<?= base_url(); ?>Landing/Login";
+			}
+			
+			firebase.auth().onAuthStateChanged(function(user){
+				if	(user){
+					var email = user.email;
+					var dn = user.displayName;
+					var UID = user.uid;
+					var pp = user.photoURL;
+					var phoneNumber = user.phoneNumber;
+					firebase.database().ref("users").once('value', function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+							if (UID == childKey){
+								if	(childData.type == "user"){
+									window.location.href = "<?= base_url(); ?>Home";
+								}else{
+									window.location.href = "<?= base_url(); ?>Landing/Homeadmin";
+								}
+							}
+						});
+					});
+				}
+			});
 		</script>
 	</body>
 	<script>

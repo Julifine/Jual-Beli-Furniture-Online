@@ -11,7 +11,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<link rel="stylesheet" href="../CSS/home_user.css">
+		<link rel="stylesheet" href="<?= base_url(); ?>/CSS/home_user.css">
 		<link href="https://fonts.googleapis.com/css?family=Saira&display=swap" rel="stylesheet">
 		
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
@@ -21,7 +21,7 @@
 		<script src="https://apis.google.com/js/platform.js" async defer></script>
 		<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
 		
-		<link rel="shortcut icon" href="../Assets/logo.png">
+		<link rel="shortcut icon" href="<?= base_url(); ?>/Assets/logo.png">
 		
 	</head>
 
@@ -39,24 +39,58 @@
 				<input type="submit" onClick="logout()" name="submit" value="LOG OUT" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none;background-color: white;margin-top: 20px;">
 			</div>
 		</div>
-		<script src="../js/auth.js"></script>
+		<script src="<?= base_url(); ?>/js/auth.js"></script>
 		<script>
 			firebase.auth().onAuthStateChanged(function(user){
+				
 				if	(!user){
-					window.location = "Login.php";
+					window.location = "<?= base_url(); ?>Landing/Login";
 				}else{
 					
 					var email = user.email;
 					var UID = user.uid;
 					var pp = user.photoURL;
+					var dn = user.displayName;
+					var phoneNumber = user.phoneNumber;
 					
 					if(pp == null){
-						pp = "../Assets/user-vector.svg";
+						pp = "<?= base_url(); ?>/Assets/user-vector.svg";
 					}
 					
 					if(email == null){
 						email = "-";
 					}
+					
+					if(dn == null){
+						dn = phoneNumber;
+					}
+					
+					if(phoneNumber == null){
+						phoneNumber = "-";
+					}
+					
+					firebase.database().ref("users").once('value', function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+						});
+						var key = Object.keys(snapshot.val());
+						for (i = 0; i < key.length; i++){
+							if (UID == key[i]){
+								break;
+							}else{
+								var firebaseRef = firebase.database().ref("users/" + UID);
+								firebaseRef.set({
+									email: email,
+									displayName: dn,
+									uid:UID,
+									imageUrl: pp,
+									phoneNumber: phoneNumber,
+									type: 'user'
+								});
+							}
+						}
+					});
 					
 					document.getElementById("useremail").innerHTML = email;
 					document.getElementById("useruid").innerHTML = UID;

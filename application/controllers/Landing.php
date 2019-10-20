@@ -18,8 +18,29 @@ class Landing extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+	
+	public function Register()
+	{
+		$this->load->view('Register');
+	}
+	
+	public function Login()
 	{
 		$this->load->view('Login');
+	}
+	
+	public function RegisterAdmin()
+	{
+		$this->load->view('RegisterAdmin');
+	}
+	
+	public function Homeuser()
+	{
+		$this->load->view('homeuser');
+	}
+	
+	public function Homeadmin()
+	{
+		$this->load->view('homeadmin');
 	}
 }
