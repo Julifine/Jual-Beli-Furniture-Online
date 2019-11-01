@@ -18,7 +18,7 @@
   <div class="container">
         <div class="row justify-content-center">
             <div class="title col-12 col-lg-8" style="color: white">
-              <h1>ADD PRODUCT</h1>
+              <h1>EDIT PRODUCT</h1>
             </div>
         </div>
   </div>
@@ -68,11 +68,11 @@
                         </div>
 						<div data-for="message" class="col-md-12 form-group" style="color: white">
                             <label for="message-form1-53" class="form-control-label mbr-fonts-style display-7">Product Image</label>
-							<img src="<?= base_url(); ?>assets/bg/no_image.jpg" alt="" class="form-control" style="height: 200px;width: 200px;padding: 0px" id="productImage">
-                            <input type="file" name="uploadImage" data-form-field="Name" required="required" class="form-control" id="uploadImage" style="background-color: transparent;border: none;color: white;padding: 0px;margin-top: 10px" accept=".jpg, .png, .jpeg" multiple accept='image/*'>
+							<img id="productImage" src="<?= base_url(); ?>assets/bg/no_image.jpg" alt="" class="form-control" style="height: 200px;width: 200px;padding: 0px" id="productImage">
+                            <input type="file" name="uploadImage" data-form-field="Name" class="form-control" id="uploadImage" style="background-color: transparent;border: none;color: white;padding: 0px;margin-top: 10px" accept=".jpg, .png, .jpeg" multiple accept='image/*'>
                         </div>
                         <div class="col-md-12 input-group-btn">
-							<a href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/Wardrobe')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
+							<a href="javascript:stringSplit('<?=$productName;?>')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
                           	
 							<button type="submit" class="btn btn-primary btn-form-product display-4" style="border-radius: 20px!important">ADD NOW</button>
                         </div>
@@ -91,6 +91,7 @@
 <script>  
 	function isInputNumber(evt){
 		var ch = String.fromCharCode(evt.which);
+				
 		if(!(/[0-9]/.test(ch))){
 			evt.preventDefault();
 		}
@@ -135,61 +136,7 @@
 	  return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
 	}
 	
-	const addProductForm = document.querySelector('#addProductWardrobe');
-	addProductForm.addEventListener('submit',(e) => {
-		e.preventDefault();
-
-		var roomCategory = addProductForm['roomCategory'].value;
-		var productCategory = addProductForm['productCategory'].value;
-		var productName = addProductForm['productName'].value;
-		var price = addProductForm['price'].value;
-		var stock = addProductForm['stock'].value;
-		var desc = addProductForm['desc'].value;
-		var filename = selectedFile.name;
-//		var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/"+filename);
-		var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/productImage.png");
-		var uploadTask = storageRef.put(selectedFile);
-		
-		var priced = formatString(price,"IDR ");
-		
-		uploadTask.on('state_changed',function(snapshot){
-			var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-			document.getElementById('alert-warn').style.display = "block";
-			document.getElementById('alert-message').innerHTML = 'Upload is ' + progress + '% done';
-			  switch (snapshot.state) {
-				case firebase.storage.TaskState.PAUSED: // or 'paused'
-				  console.log('Upload is paused');
-				  break;
-				case firebase.storage.TaskState.RUNNING: // or 'running'
-				  console.log('Upload is running');
-				  break;
-			  }
-		},function(error){
-			
-		},function(){
-			uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-				console.log('File available at', downloadURL);
-				var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName);
-				firebaseRef.set({
-					roomCategory: roomCategory,
-					productCategory: productCategory,
-					productName:productName,
-					price: priced,
-					stock: stock,
-					desc: desc,
-					productImage: downloadURL
-				}, function(error) {
-					if (error) {
-					  // The write failed...
-					} else {
-					  // Data saved successfully!
-						document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
-						addProductForm.reset();
-					}
-				  });
-			});
-		});
-	});
+	var selectedFile;
 	
 	$("#uploadImage").change(function () {
 		if(this.files[0].name.match(".jp") || this.files[0].name.match(".png")){
@@ -201,16 +148,144 @@
 				}
 				reader.readAsDataURL(this.files[0]);
 			}
-		}
-		else
-		{
+		}else if(this.files[0] == null){
+			selectedFile =  null;
+		}else{
 			alert("Sorry only jpeg images are accepted");
 			document.getElementById("uploadImage").value=""; //clear the uploaded file
 		}
 		
 	});
 	
+	function stringSplit(kata_kata){
+		console.log(kata_kata);
+		var newString = kata_kata.replace(/%20/g," ");
+		return toOtherPage('<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+newString);
+	}
+	
+	const addProductForm = document.querySelector('#addProductWardrobe');
+	addProductForm.addEventListener('submit',(e) => {
+		e.preventDefault();
+
+		var productName = '<?php echo $productName;?>';
+		var newProductName = productName.replace(/%20/g," ");
+		
+		var roomCategory = addProductForm['roomCategory'].value;
+		var productCategory = addProductForm['productCategory'].value;
+		var productName = addProductForm['productName'].value;
+		var price = addProductForm['price'].value;
+		var stock = addProductForm['stock'].value;
+		var desc = addProductForm['desc'].value;
+		
+		var priced = formatString(price,"IDR ");
+		
+		console.log(parseInt(priced));
+		if(priced > 0){
+			if (selectedFile != null){
+				var filename = selectedFile.name;
+				//var filename = addProductForm['uploadImage'].value;
+				var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/productImage.jpg");
+				var uploadTask = storageRef.put(selectedFile);
+				uploadTask.on('state_changed',function(snapshot){
+					var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					document.getElementById('alert-warn').style.display = "block";
+					document.getElementById('alert-message').innerHTML = 'Upload is ' + progress + '% done';
+					  switch (snapshot.state) {
+						case firebase.storage.TaskState.PAUSED: // or 'paused'
+						  console.log('Upload is paused');
+						  break;
+						case firebase.storage.TaskState.RUNNING: // or 'running'
+						  console.log('Upload is running');
+						  break;
+					  }
+				},function(error){
+
+				},function(){
+					uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+						console.log('File available at', downloadURL);
+						var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/");
+						firebaseRef.child(productName).update({
+							roomCategory: roomCategory,
+							productCategory: productCategory,
+							productName:productName,
+							price: priced,
+							stock: stock,
+							desc: desc,
+							productImage: downloadURL
+						}, function(error) {
+							if (error) {
+							  // The write failed...
+							} else {
+							  // Data saved successfully!
+								document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
+								if (productName != newProductName){
+									firebaseRef.child(newProductName).remove();
+								}
+								window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+productName;
+							}
+						});
+					});
+				});
+			}else{
+				var imageURL = document.getElementById("productImage").src;
+				var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/");
+				firebaseRef.child(productName).update({
+					roomCategory: roomCategory,
+					productCategory: productCategory,
+					productName:productName,
+					price: priced,
+					stock: stock,
+					desc: desc,
+					productImage: imageURL
+				}, function(error) {
+					if (error) {
+					  // The write failed...
+					} else {
+					  // Data saved successfully!
+						document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
+						if (productName != newProductName){
+							firebaseRef.child(newProductName).remove();
+						}
+						window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+productName;
+						console.log(imageURL);
+					}
+				});
+			}
+		}else{
+			alert("Price can't zero!");
+		}
+	});
+	
 	function toOtherPage(base_url){
 		window.location = base_url;
-	}     
+	}
+	window.onload = loadView;
+	
+	function loadView(){
+		
+		var productName = '<?php echo $productName;?>';
+		var newProductName = productName.replace(/%20/g," ");
+		
+		if (newProductName != null){
+			console.log(newProductName);
+			firebase.database().ref("products/Bedroom/Wardrobe/").once('value', function(snapshot) {
+				snapshot.forEach(function(childSnapshot) {
+					var childKey = childSnapshot.key;
+					var childData = childSnapshot.val();
+					if(newProductName == childKey){
+						document.getElementById("roomCategory").value = childData.roomCategory;
+						document.getElementById("productCategory").value = childData.productCategory;
+						document.getElementById("productName").value = childData.productName;
+						document.getElementById("price").value = formatRupiah(childData.price, "IDR ");
+						document.getElementById("stock").value = childData.stock;
+						document.getElementById("desc").value = childData.desc;
+						document.getElementById("productImage").src = childData.productImage;
+					}
+				});
+			});
+		}
+	}
+	
+	
+            
 </script>

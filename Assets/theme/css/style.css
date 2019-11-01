@@ -2,8 +2,90 @@
  * Mobirise v4 theme (https://mobirise.com/)
  * Copyright 2017 Mobirise
  */
+
+html, body{
+	height: 100%!important;
+	margin: 0px!important;
+}
+
+.productImage{
+	width: 400px!important;
+	height: 400px!important
+}
+
+#btn-stock-min:hover{
+	cursor: pointer
+}
+
+.link-nav{
+	color: #808080
+}
+
+.btn-hijau{
+	background-color: #28A745!important;color: black!important
+}
+
+.btn-merah{
+	background-color: #DC3545!important;color: black!important
+}
+
+
+.link-nav:hover{
+	color: white
+}
+
+#btn-stock-plus:hover{
+	cursor: pointer
+}
+
+#btn-detail-back:hover{
+	color: white!important;
+	border: solid 2px white!important;
+	cursor: pointer!important
+}
+
+.dropdown_menu{
+	font-size: 20px;
+	padding: 6px;
+	background-color: transparent;
+	color: white;
+	border: none;
+	text-align: left;
+	width: 110%
+}
+
+#btn-add-cart:hover{
+	cursor: pointer
+}
+
+.dropdown_menu:hover{
+	cursor: pointer
+}
+
+.active, .dropdown_menu:hover {
+  background-color: #808080;
+  color: white;
+}
+
+.dropdown_menu:active{
+	background-color: #808080
+}
+
+.btn-form-product{
+	border-radius: 10px!important
+}
+
 section {
   background-color: #eeeeee; }
+
+html *{
+	font-family: 'Saira', sans-serif;
+}
+
+.add-product:hover{
+	color: #808080!important;
+	background-color: white
+}
 
 body {
   font-style: normal;

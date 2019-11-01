@@ -5,7 +5,7 @@ var firebaseConfig = {
 	authDomain: "julifine.firebaseapp.com",
 	databaseURL: "https://julifine.firebaseio.com",
 	projectId: "julifine",
-	storageBucket: "",
+	storageBucket: "gs://julifine.appspot.com",
 	messagingSenderId: "664499148646",
 	appId: "1:664499148646:web:6d2560cc26c90907ac1aa7"
 };
@@ -115,19 +115,57 @@ function signInWithGoogle(base_url){
 	});
 }
 
-
 var uiConfig = {
-	signInSuccessUrl: base_url,
+	signInSuccessUrl: base_url
+	,
 	signInOptions: [
 		firebase.auth.PhoneAuthProvider.PROVIDER_ID
 	],
 	tosUrl: '',
 	recaptchaParameters:{
 		'size':'invisible',
+	},
+	callbacks:{
+		'signInSuccess': function(user, credential, redirectUrl) {
+			var pp;
+			var dn;
+			var email;
+			if (user.photoURL==null){
+				pp = "https://firebasestorage.googleapis.com/v0/b/julifine.appspot.com/o/default%2FphotoURL%2Fuser-white.svg?alt=media&token=319efa94-f140-414c-ae63-b3f50072c6fd";
+			}
+
+			if (user.displayName == null){
+				dn = user.phoneNumber;
+			}
+
+			if(user.email == null){
+				email = "-";
+			}
+
+			var user = firebase.auth().currentUser;
+			user.updateProfile({
+				displayName: dn
+			});
+			var firebaseRef = firebase.database().ref("users/" + user.uid);
+			firebaseRef.set({
+				email: email,
+				displayName: dn,
+				uid:user.uid,
+				imageUrl: pp,
+				phoneNumber: user.phoneNumber,
+				type: 'user'
+			});
+			return true;
+		}
 	}
 };
+
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container',uiConfig);
+
+function registerUser(){
+	
+}
 
 const signUpForm = document.querySelector('#signUpFormUser');
 signUpForm.addEventListener('submit',(e) => {
@@ -137,86 +175,72 @@ signUpForm.addEventListener('submit',(e) => {
 	signup_password = signUpForm['pass_field'].value;
 	signup_username = signUpForm['username'].value;
 	
-	firebase.auth().createUserWithEmailAndPassword(signup_email,signup_password).then(cred => {
-		console.log(cred);
-		var pp;
-		var pn;
-		if (cred.user.photoURL==null){
-			pp = "https://firebasestorage.googleapis.com/v0/b/julifine.appspot.com/o/default%2FphotoURL%2Fuser-white.svg?alt=media&token=319efa94-f140-414c-ae63-b3f50072c6fd";
-		}
-		if (cred.user.phoneNumber == null){
-			pn = "-";
-		}
-		var user = firebase.auth().currentUser;
-		user.updateProfile({
-			displayName: signup_username
-		});
-		var firebaseRef = firebase.database().ref("users/" + cred.user.uid);
-		firebaseRef.set({
-			email: cred.user.email,
-			displayName: signup_username,
-			uid:cred.user.uid,
-			imageUrl: pp,
-			phoneNumber: pn,
-			type: 'user'
-		});
-		
-	}).catch(function(error) {
-	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  // The email of the user's account used.
-	  var email = error.email;
-	  // The firebase.auth.AuthCredential type that was used.
-	  var credential = error.credential;
-	  window.alert("Error: "+errorMessage);
-	});
+	var status;
 	
-});
+	if ( signup_email != '' && signup_password != '' && signup_username != ''){
+		
+		firebase.database().ref("users").once('value', function(snapshot) {
+			var child = [];
+			snapshot.forEach(function(childSnapshot) {
+				var childKey = childSnapshot.key;
+				var childData = childSnapshot.val();
+				child.push(childData);
+			});
+			for(i=0;i<child.length;i++){
+				if (signup_username == child[i].displayName){
+					alert('Username sudah digunakan! Silahkan cari username lain.');
+					status = false;
+					break;
+				}else{
+					if (child[i].email == signup_email){
+						alert('Email sudah digunakan! Silahkan cari email lain.');
+						status = false;
+						break;
+					}
+					else{
+						status = true;
+					}
+				}
+			}
 
-const signUpFormAdmin = document.querySelector('#signUpFormAdmin');
-signUpFormAdmin.addEventListener('submit',(e) => {
-	e.preventDefault();
-	
-	signup_email = signUpFormAdmin['email_field'].value;
-	signup_password = signUpFormAdmin['pass_field'].value;
-	signup_username = signUpFormAdmin['username'].value;
-	
-	firebase.auth().createUserWithEmailAndPassword(signup_email,signup_password).then(cred => {
-		console.log(cred);
-		var pp;
-		var pn;
-		if (cred.user.photoURL==null){
-			pp = "https://firebasestorage.googleapis.com/v0/b/julifine.appspot.com/o/default%2FphotoURL%2Fuser-white.svg?alt=media&token=319efa94-f140-414c-ae63-b3f50072c6fd";
-		}
-		if (cred.user.phoneNumber == null){
-			pn = "-";
-		}
-		var user = firebase.auth().currentUser;
-		user.updateProfile({
-			displayName: signup_username
+			if (status){
+				firebase.auth().createUserWithEmailAndPassword(signup_email,signup_password).then(cred => {
+					console.log(cred);
+					var pp;
+					var pn;
+					if (cred.user.photoURL==null){
+						pp = "https://firebasestorage.googleapis.com/v0/b/julifine.appspot.com/o/default%2FphotoURL%2Fuser-white.svg?alt=media&token=319efa94-f140-414c-ae63-b3f50072c6fd";
+					}
+					if (cred.user.phoneNumber == null){
+						pn = "-";
+					}
+					var user = firebase.auth().currentUser;
+					user.updateProfile({
+						displayName: signup_username
+					});
+					var firebaseRef = firebase.database().ref("users/" + cred.user.uid);
+					firebaseRef.set({
+						email: cred.user.email,
+						displayName: signup_username,
+						uid:cred.user.uid,
+						imageUrl: pp,
+						phoneNumber: pn,
+						type: 'user'
+					});
+				}).catch(function(error) {
+					var errorCode = error.code;
+					var errorMessage = error.message;
+					// The email of the user's account used.
+					var email = error.email;
+					// The firebase.auth.AuthCredential type that was used.
+					var credential = error.credential;
+					window.alert(errorMessage);
+				});
+			}
 		});
-		var firebaseRef = firebase.database().ref("users/" + cred.user.uid);
-		firebaseRef.set({
-			email: cred.user.email,
-			displayName: signup_username,
-			uid:cred.user.uid,
-			imageUrl: pp,
-			phoneNumber: pn,
-			type: 'admin'
-		});
-		
-	}).catch(function(error) {
-	  // Handle Errors here.
-	  var errorCode = error.code;
-	  var errorMessage = error.message;
-	  // The email of the user's account used.
-	  var email = error.email;
-	  // The firebase.auth.AuthCredential type that was used.
-	  var credential = error.credential;
-	  window.alert("Error: "+errorMessage);
-	});
-	
+	}else{
+		window.alert("The form is incomplete. Please fill out all fields.");
+	}
 });
 
 function logout(){

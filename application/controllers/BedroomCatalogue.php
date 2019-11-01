@@ -34,11 +34,42 @@ class BedroomCatalogue extends CI_Controller {
 		$this->load->view('Footer/footers');
 	}
 	
+	public function detailProduct($productName)
+	{
+		$data['judul'] = 'Detail Product';
+		$data['productName'] = $productName;
+		$this->load->view('Header/headers',$data);
+		$this->load->view('Bedroom/detail_product');
+		$this->load->view('Footer/footers');
+	}
+	
+	public function detailProductAdmin($productName)
+	{
+		$data['judul'] = 'Detail Product';
+		$data['productName'] = $productName;
+		$this->load->view('Header/headers',$data);
+		$this->load->view('Bedroom/detail_product_admin');
+		$this->load->view('Footer/footers');
+	}
+	
 	public function addWardrobe()
 	{
 		$data['judul'] = 'Add Product';
+		$data['roomCategory'] = 'Bedroom';
+		$data['productCategory'] = 'Wardrobe';
 		$this->load->view('Header/headers',$data);
 		$this->load->view('Bedroom/Add_Product/add_product_wardrobe.php');
+		$this->load->view('Footer/footers');
+	}
+	
+	public function editWardrobe($productName)
+	{
+		$data['judul'] = 'Edit Product';
+		$data['roomCategory'] = 'Bedroom';
+		$data['productCategory'] = 'Wardrobe';
+		$data['productName'] = $productName;
+		$this->load->view('Header/headers',$data);
+		$this->load->view('Bedroom/edit_product.php');
 		$this->load->view('Footer/footers');
 	}
 	

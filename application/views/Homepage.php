@@ -100,59 +100,8 @@
         </div>
     </div>
 </section>
-
 <script>
 	function toRoomsHome(base_url){
 		window.location = base_url;
 	}
-	
-	firebase.auth().onAuthStateChanged(function(user){
-				
-				if	(user){					
-					var email = user.email;
-					var UID = user.uid;
-					var pp = user.photoURL;
-					var dn = user.displayName;
-					var phoneNumber = user.phoneNumber;
-					
-					if(pp == null){
-						pp = "https://firebasestorage.googleapis.com/v0/b/julifine.appspot.com/o/default%2FphotoURL%2Fuser-white.svg?alt=media&token=319efa94-f140-414c-ae63-b3f50072c6fd";
-					}
-					
-					if(email == null){
-						email = "-";
-					}
-					
-					if(dn == null){
-						dn = phoneNumber;
-					}
-					
-					if(phoneNumber == null){
-						phoneNumber = "-";
-					}
-					
-					firebase.database().ref("users").once('value', function(snapshot) {
-						snapshot.forEach(function(childSnapshot) {
-							var childKey = childSnapshot.key;
-							var childData = childSnapshot.val();
-						});
-						var key = Object.keys(snapshot.val());
-						for (i = 0; i < key.length; i++){
-							if (UID == key[i]){
-								break;
-							}else{
-								var firebaseRef = firebase.database().ref("users/" + UID);
-								firebaseRef.set({
-									email: email,
-									displayName: dn,
-									uid:UID,
-									imageUrl: pp,
-									phoneNumber: phoneNumber,
-									type: 'user'
-								});
-							}
-						}
-					});
-				}
-			});
 </script>

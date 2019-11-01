@@ -33,7 +33,7 @@
 		<section>
 			<nav class="navbar navbar-expand-lg navbar-dark static-top bg-topbar">
 			  <div class="container">
-				<a class="navbar-brand" href="<?= base_url(); ?>Landing">
+				<a class="navbar-brand" href="<?= base_url(); ?>Home">
 					  <img src="<?= base_url();?>/Assets/logo-text-landscape.png" alt="">
 					</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -155,16 +155,6 @@
 		<script>var base_url = '<?php echo base_url(); ?>';</script>
 		<script src="<?= base_url(); ?>/js/auth.js"></script>
 		<script>
-			function validasi(){
-				var username = document.getElementById("username").value;
-				var email = document.getElementById("email").value;
-				var password = document.getElementById("password").value;
-				if (nama != "" && email!="" && alamat !="") {
-					return true;
-				}else{
-					alert('Anda harus mengisi data dengan lengkap !');
-				}
-			}
 			
 			function toLogin(){
 				window.location.href = "<?= base_url(); ?>Landing/Login";
@@ -172,24 +162,7 @@
 			
 			firebase.auth().onAuthStateChanged(function(user){
 				if	(user){
-					var email = user.email;
-					var dn = user.displayName;
-					var UID = user.uid;
-					var pp = user.photoURL;
-					var phoneNumber = user.phoneNumber;
-					firebase.database().ref("users").once('value', function(snapshot) {
-						snapshot.forEach(function(childSnapshot) {
-							var childKey = childSnapshot.key;
-							var childData = childSnapshot.val();
-							if (UID == childKey){
-								if	(childData.type == "user"){
-									window.location.href = "<?= base_url(); ?>Home";
-								}else{
-									window.location.href = "<?= base_url(); ?>Landing/Homeadmin";
-								}
-							}
-						});
-					});
+					window.location.href = "<?= base_url(); ?>Home";
 				}
 			});
 		</script>

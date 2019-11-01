@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Julifine | Register Admin</title>
+		<title>Julifine | Register</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="google-signin-client_id" content="664499148646-6irjsskl9ph5eafhihqnb7dsgaf6a47f.apps.googleusercontent.com">
 		
@@ -30,20 +30,27 @@
 	</head>
 
 	<body>
-		<section style="height:  100%">
+		<section>
 			<nav class="navbar navbar-expand-lg navbar-dark static-top bg-topbar">
 			  <div class="container">
-				<a class="navbar-brand" href="<?= base_url(); ?>">
-					  <img src="<?= base_url(); ?>/Assets/logo-text-landscape.png" alt="">
+				<a class="navbar-brand" href="<?= base_url(); ?>Home">
+					  <img src="<?= base_url();?>/Assets/logo-text-landscape.png" alt="">
 					</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+					  <span class="navbar-toggler-icon"></span>
+					</button>
 				<div class="collapse navbar-collapse" id="navbarResponsive">
 				  <ul class="navbar-nav ml-auto">
 					<li class="nav-item dropdown">
+						<li class="nav-item active">
+							<span id="doesnt" class="btn text-1">Already have an account?</span>
+						</li>
+						<li class="nav-item">
+							<a id="btn-register" class="nav-link" href="javascript:toLogin()"><button class="masuk">LOGIN</button></a>
+						</li>
+						<li class="nav-item dropdown">
 						<span class="nav-link language" data-toggle="dropdown" id="bahasa">
-							<img src="<?= base_url(); ?>/Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
+							<img src="<?= base_url();?>/Assets/globe.svg" alt="" style="width: 15px;height: 15px;">  ENGLISH
 						</span>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
 							<a href="" class="dropdown-item" id="highlighted">English</a>
@@ -76,71 +83,140 @@
 						<span>Register a new admin now</span>
 					</div>
 					<div class="row justify-content-center" style="">
-						<form id="signUpFormAdmin" action="#" method="post" style="width: 100%;padding-left: 10%;padding-right: 10%">
+						<form id="signUpForm" method="post" style="width: 100%;padding-left: 10%;padding-right: 10%">
 							<div class="field justify-content-center">
-								<input type="username" name="username" id="username" placeholder="">
-								<label for="username" class="text-label label-placeholder" style="">Username</label>
+								<input type="username" name="usrAdmin" id="usrAdmin" placeholder="">
+								<label for="usrAdmin" class="text-label label-placeholder" style="">Username</label>
 							</div>
 							<div class="field justify-content-center">
-								<input type="email" name="email" id="email_field" placeholder="">
-								<label for="email_field" class="text-label label-placeholder" style="">Email</label>
+								<input type="email" name="emlAdmin" id="emlAdmin" placeholder="">
+								<label for="emlAdmin" class="text-label label-placeholder" style="">Email</label>
 							</div>
 							<div class="field" style="margin-top: 60px">
-								<input type="password" name="password" id="pass_field" placeholder="">
-								<label for="pass_field" class="text-label label-placeholder" style="">Password</label>
-								<span toggle="#pass_field" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
+								<input type="password" name="pswAdmin" id="pswAdmin" placeholder="">
+								<label for="pswAdmin" class="text-label label-placeholder" style="">Password</label>
+								<span toggle="#pswAdmin" class="fas fa-eye fa-lg field-icon toggle-password"  style=""></span>
 							</div>
 							<div class="field" style="margin-top: 80px;margin-bottom: 40px">
-								<input type="submit" class="tombol" name="submit" value="START" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-razer">
+								<input type="submit" class="" name="submit" value="START" style="width: 100%;height:50px;font-size: 16px;border-radius: 10px;font-weight: bolder;border: none" id="btn-razer">
 							</div>
 						</form>
 					</div>
 				</div>
-				<div style="position: absolute;bottom: 6px;left: 30%;right: 30%;">
-					<div class="row justify-content-center">
-						<a class="footer" href="#">Julifine.com</a>
-					</div>
-					<div class="row justify-content-center">
-						<span class="footer-text">Copyright © 2019 Julifine Co. All rights reserved.</span>
-					</div>
-				</div>
 			</div>
-		</section>	
+			<div class="" style="position: absolute; bottom: 5px;left: 20%;right: 20%;">
+				<center>
+				<div class="row justify-content-center">
+					<a class="footer" href="#">Julifine.com</a>
+				</div>
+				<div class="row justify-content-center">
+					<span class="footer-text">Copyright © 2019 Julifine Co. All rights reserved.</span>
+				</div></center>
+				
+			</div>
+		</section>		
 		<script>var base_url = '<?php echo base_url(); ?>';</script>
 		<script src="<?= base_url(); ?>/js/auth.js"></script>
 		<script>
-			$(".toggle-password").click(function() {
-				$(this).toggleClass("fa-eye-white");
-				var input = $($(this).attr("toggle"));
-				if (input.attr("type") == "password") {
-					input.attr("type", "text");
-				}else{
-					input.attr("type", "password");
-				}
-			});
+			
+			function toLogin(){
+				window.location.href = "<?= base_url(); ?>Landing/Login";
+			}
 			
 			firebase.auth().onAuthStateChanged(function(user){
 				if	(user){
-					var email = user.email;
-					var dn = user.displayName;
-					var UID = user.uid;
-					var pp = user.photoURL;
-					var phoneNumber = user.phoneNumber;
-					firebase.database().ref("users").once('value', function(snapshot) {
-						snapshot.forEach(function(childSnapshot) {
-							var childKey = childSnapshot.key;
-							var childData = childSnapshot.val();
-							if (UID == childKey){
-								if	(childData.type == "user"){
-									window.location.href = "<?= base_url(); ?>Home";
-								}else{
-									window.location.href = "<?= base_url(); ?>Landing/Homeadmin";
-								}
-							}
-						});
-					});
+					window.location.href = "<?= base_url(); ?>Home";
 				}
 			});
 		</script>
 	</body>
+	<script>
+		$(".toggle-password").click(function() {
+			$(this).toggleClass("fa-eye-white");
+			var input = $($(this).attr("toggle"));
+			if (input.attr("type") == "password") {
+				input.attr("type", "text");
+			}else{
+				input.attr("type", "password");
+			}
+		});
+		
+		const signUpAdmin = document.querySelector('#signUpForm');
+		signUpAdmin.addEventListener('submit',(e) => {
+			e.preventDefault();
+
+			admin_email = signUpAdmin['emlAdmin'].value;
+			admin_password = signUpAdmin['pswAdmin'].value;
+			admin_username = signUpAdmin['usrAdmin'].value;
+
+			var status;
+
+			if ( admin_email != '' && admin_password != '' && admin_username != ''){
+				
+				firebase.database().ref("users").once('value', function(snapshot) {
+					var child = [];
+					snapshot.forEach(function(childSnapshot) {
+						var childKey = childSnapshot.key;
+						var childData = childSnapshot.val();
+						child.push(childData);
+					});
+					for(i=0;i<child.length;i++){
+						if (admin_username == child[i].displayName){
+							alert('Username sudah digunakan! Silahkan cari username lain.');
+							status = false;
+							break;
+						}else{
+							if (child[i].email == admin_email){
+								alert('Email sudah digunakan! Silahkan cari email lain.');
+								status = false;
+								break;
+							}
+							else{
+								status = true;
+							}
+						}
+					}
+
+					if (status){
+						firebase.auth().createUserWithEmailAndPassword(admin_email,admin_password).then(cred => {
+							console.log(cred);
+							var pp;
+							var pn;
+							if (cred.user.photoURL==null){
+								pp = "https://firebasestorage.googleapis.com/v0/b/julifine.appspot.com/o/default%2FphotoURL%2Fuser-white.svg?alt=media&token=319efa94-f140-414c-ae63-b3f50072c6fd";
+							}
+							if (cred.user.phoneNumber == null){
+								pn = "-";
+							}
+							var user = firebase.auth().currentUser;
+							user.updateProfile({
+								displayName: admin_username
+							});
+							var firebaseRef = firebase.database().ref("users/" + cred.user.uid);
+							firebaseRef.set({
+								email: cred.user.email,
+								displayName: admin_username,
+								uid:cred.user.uid,
+								imageUrl: pp,
+								phoneNumber: pn,
+								type: 'admin'
+							});
+						}).catch(function(error) {
+							var errorCode = error.code;
+							var errorMessage = error.message;
+							// The email of the user's account used.
+							var email = error.email;
+							// The firebase.auth.AuthCredential type that was used.
+							var credential = error.credential;
+							window.alert(errorMessage);
+						});
+					}
+				});
+				
+			}else{
+				window.alert("The form is incomplete. Please fill out all fields.");
+			}
+			
+		});
+	</script>
 </html>
