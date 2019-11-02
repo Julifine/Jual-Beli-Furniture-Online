@@ -16,11 +16,11 @@
 <section class="mbr-section content4 cid-rFeBNSud4e" id="content4-z">
 	<div class="container">
 		<div style="text-align: right;display: none" id="btn-add-product">
-			<a href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/addWardrobe')" class="btn add-product" style="color: white;border: 2px solid white;padding: 15px;border-radius: 30px"><i class="fas fa-plus" style="margin-right: 10px"></i>Add Product</a>
+			<a href="javascript:stringSplit('<?=$judul;?>')" class="btn add-product" style="color: white;border: 2px solid white;padding: 15px;border-radius: 30px"><i class="fas fa-plus" style="margin-right: 10px"></i>Add Product</a>
 		</div>
         <div class="media-container-row">
             <div class="title col-12 col-md-8">
-                <h2 class="align-center pb-3 mbr-fonts-style display-5">WARDROBE</h2>
+                <h2 class="align-center pb-3 mbr-fonts-style display-5" id="subTitle"></h2>
             </div>
         </div>
     </div>
@@ -54,10 +54,23 @@
 	
 	window.onload = loadView;
 	
+	function stringSpace(string){
+		return string.replace(/%20/g," ");
+	}
+	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
+	}
+	
 	function loadView(){
 		
+		var sub = stringSpace("<?=$judul?>");
+		var newSub = nReplacer(sub);
+		var subtitle = document.getElementById("subTitle");
+		subtitle.innerHTML = newSub.toUpperCase();
+		
 		var child = [];
-		firebase.database().ref("products/Bedroom/Wardrobe").once('value', function(snapshot) {
+		firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
 
 			snapshot.forEach(function(childSnapshot) {
 				var childKey = childSnapshot.key;
@@ -116,7 +129,7 @@
 										for(var i=0;i<elements.length;i++){
 											document.getElementById("content-item-"+i).onclick = function() {
 												//console.log(this.dataset.tags);
-												window.location = '<?=base_url();?>BedroomCatalogue/detailProduct/'+this.dataset.tags;
+												window.location = '<?=base_url();?>BedroomCatalogue/detailProduct/'+sub+"/"+this.dataset.tags;
 											};
 										}
 									}else{
@@ -126,7 +139,7 @@
 										for(var i=0;i<elements.length;i++){
 											document.getElementById("content-item-"+i).onclick = function() {
 												//console.log(this.dataset.tags);
-												window.location = '<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+this.dataset.tags;
+												window.location = '<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+sub+"/"+this.dataset.tags;
 											};
 										}
 									}
@@ -155,4 +168,9 @@
 		window.location =base_url;
 	}
 	
+	function stringSplit(kata_kata){
+		console.log(kata_kata);
+		var newString = kata_kata.replace(/%20/g," ");
+		return toOtherPage('<?=base_url();?>BedroomCatalogue/addProduct/'+newString);
+	}
 </script>

@@ -16,12 +16,7 @@
   <div class="container">
         <div class="row justify-content-center">
             <div class="title col-lg-12" style="color: white">
-              <!--<h1>Wardrobe</h1>-->
-				<!--<button onClick="toOtherPage('<?= base_url();?>BedroomCatalogue/Wardrobe')" id="btn-detail-back" style="width: 20%;padding: 10px;border-radius: 16px;background-color: transparent;border: 2px solid #808080;font-size: 24px;font-weight: bold;color: #808080">
-					<i class="fas fa-chevron-circle-left"></i>
-					Back
-				</button>-->
-				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/')">Bedroom</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/Wardrobe')">Wardrobe</a> > <b id="productNameLink"></b></span>
+				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/')">Bedroom</a> > <a class="link-nav" href="javascript:toOtherPageWspace('<?=$productCategory;?>')" id="productCategoryLink"></a> > <b id="productNameLink"></b></span>
             </div>
         </div>
   </div>
@@ -49,7 +44,7 @@
 							</div>
 						</div>
 						<div class="row" style="margin-top: 40px;">
-							<button onClick="toOtherPage('<?= base_url();?>BedroomCatalogue/editWardrobe/<?=$productName;?>')" id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: #D2C919;border: none;font-size: 24px;font-weight: bold">
+							<button onClick="toOtherPage('<?= base_url();?>BedroomCatalogue/editProduct/<?=$productCategory;?>/<?=$productName;?>')" id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: #D2C919;border: none;font-size: 24px;font-weight: bold">
 								<i class="fas fa-edit"></i>
 								Edit Product
 							</button>
@@ -253,27 +248,35 @@
 		}
 	}
 	
-	function deleteProduct(productName){
-		var newProductName = productName.replace(/%20/g," ");
+	function deleteProduct(productName,productCategory){
+		var prodName = stringSplit(productName);
+		var prodCat = stringSplit(productCategory);
+		
+		var newProdName = nReplacer(prodName);
+		var newProdCat = nReplacer(prodCat);
 		var child = [];
-		firebase.database().ref("products/Bedroom/Wardrobe/").once('value', function(snapshot) {
+		firebase.database().ref("products/Bedroom/"+newProdCat).once('value', function(snapshot) {
 			snapshot.forEach(function(childSnapshot) {
 				var childKey = childSnapshot.key;
 				var childData = childSnapshot.val();
 				child.push(childData);
 			});
 			for(i = 0; i < child.length; i++){
-				if(newProductName == child[i].productName){
+				if(newProdName == child[i].productName){
 					firebase.database().ref("products/" + child[i].roomCategory +"/"+ child[i].productCategory+"/"+child[i].productName).remove();
 					
 					firebase.storage().ref().child("products/" + child[i].roomCategory +"/"+ child[i].productCategory+"/"+child[i].productName+"/productImage.png").delete().then(function() {
-					  window.location = "<?= base_url();?>BedroomCatalogue/Wardrobe/";
+					  window.location = "<?= base_url();?>BedroomCatalogue/"+nReplaceAnd(newProdCat);
 					}).catch(function(error) {
 					  console.log(error.message);
 					});
 				}
 			}
 		});
+	}
+	
+	function nReplaceAnd(string){
+		return string.replace(/ & /g," n ");
 	}
 	
 	var btnContainer = document.getElementById("myDIV");
@@ -300,12 +303,21 @@
 		window.location = base_url;
 	}
 	
+	function toOtherPageWspace(base_url){
+		var productCategory = stringSplit(base_url);
+		window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/"+productCategory;
+	}
+	
 	function stringSplit(string){
 		return string.replace(/%20/g," ");
 	}
 	
 	function stringParagraf(string){
 		return string.replace(/\n/g,"<br>");
+	}
+	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
 	}
 	
 	window.onload = loadView;
@@ -317,21 +329,28 @@
 		  minimumFractionDigits: 0
 		});
 		
-		document.getElementById("productNameLink").innerHTML = stringSplit('<?= $productName;?>');
+		var sub = stringSplit("<?=$productCategory?>");
+		var productName = stringSplit("<?=$productName?>");
 		
-		var productName = '<?php echo $productName;?>';
+		var newSub = nReplacer(sub);
+		
+		
+		document.getElementById("productCategoryLink").innerHTML = newSub;
+		document.getElementById("productNameLink").innerHTML = productName;
+		
+		
 		if (productName != null){
 			console.log(productName);
-			var newProductName = productName.replace(/%20/g," ");
 			var child = [];
-			firebase.database().ref("products/Bedroom/Wardrobe/").once('value', function(snapshot) {
+			firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
 				snapshot.forEach(function(childSnapshot) {
 					var childKey = childSnapshot.key;
 					var childData = childSnapshot.val();
 					child.push(childData);
 				});
-				for(i = 0; i < child.length; i++){
-					if(newProductName == child[i].productName){
+				if(child.length != 0){
+					for(i = 0; i < child.length; i++){
+					if(productName == child[i].productName){
 						var priced = formatter.format(child[i].price);		
 						document.getElementById("productName").innerHTML = child[i].productName;
 						document.getElementById("price").innerHTML = priced;
@@ -340,13 +359,17 @@
 						document.getElementById("productImage").src = child[i].productImage;
 						document.getElementById("productImage").style.height = "500px";
 						document.getElementById("productImage").style.width = "500px";
-						document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+newProductName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
+						document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+productName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
 						break;
 					}else{
-						if(newProductName != child[i].productName && i == child.length-1){
-							window.location = "<?= base_url();?>BedroomCatalogue/Wardrobe/";
+						console.log('testis');
+						if(productName != child[i].productName && i == child.length-1){
+							window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
 						}
 					}
+				}
+				}else{
+					window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
 				}
 			});
 		}
@@ -379,7 +402,7 @@
 			  'Your file has been deleted.',
 			  'success'
 			);
-			  deleteProduct('<?= $productName;?>');
+			  deleteProduct('<?= $productName;?>','<?= $productCategory;?>');
 		  } else if (
 			/* Read more about handling dismissals below */
 			result.dismiss === Swal.DismissReason.cancel

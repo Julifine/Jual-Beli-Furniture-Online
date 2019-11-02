@@ -17,10 +17,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Wardrobe')"><img src="<?= base_url(); ?>assets/images/1-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Wardrobe')"><img src="<?= base_url(); ?>assets/images/1-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Wardrobe')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Wardrobe')">
                             Wardrobe</a></h4>
                     </div>
                 </div>
@@ -29,10 +29,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Bed')"><img src="<?= base_url(); ?>assets/images/22-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Bed')"><img src="<?= base_url(); ?>assets/images/22-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box ">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Bed')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Bed')">
                             Bed</a></h4>
                     </div>
                 </div>
@@ -41,10 +41,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Pillow')"><img src="<?= base_url(); ?>assets/images/3-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Pillow n Blanket')"><img src="<?= base_url(); ?>assets/images/3-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Pillow')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Pillow n Blanket')">
                             Pillow &amp; Blanket</a></h4>
                     </div>
                 </div>
@@ -53,10 +53,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Carpet')"><img src="<?= base_url(); ?>assets/images/4-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Carpet')"><img src="<?= base_url(); ?>assets/images/4-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Carpet')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Carpet')">
                             Carpet</a></h4>
                     </div>
                 </div>
@@ -71,10 +71,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Curtain')"><img src="<?= base_url(); ?>assets/images/5-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Curtain')"><img src="<?= base_url(); ?>assets/images/5-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Curtain')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Curtain')">
                             Curtain</a></h4>
                         
                     </div>
@@ -83,10 +83,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Lamp')"><img src="<?= base_url(); ?>assets/images/7-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Lamp')"><img src="<?= base_url(); ?>assets/images/7-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box ">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Lamp')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Lamp')">
                             Lamp</a></h4>
                         
                     </div>
@@ -95,10 +95,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Accessories')"><img src="<?= base_url(); ?>assets/images/cermin-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Accessories')"><img src="<?= base_url(); ?>assets/images/cermin-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Accessories')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Accessories')">
                             Accessories</a></h4>
                         
                     </div>
@@ -107,10 +107,10 @@
             <div class="card p-3 col-12 col-md-6 col-lg-3">
                 <div class="card-wrapper">
                     <div class="card-img">
-                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Decorations')"><img src="<?= base_url(); ?>assets/images/6-400x250.png" alt="Mobirise" title=""></a>
+                        <a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Decorations')"><img src="<?= base_url(); ?>assets/images/6-400x250.png" alt="Mobirise" title=""></a>
                     </div>
                     <div class="card-box">
-                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/Decorations')">
+                        <h4 class="card-title pb-3 mbr-fonts-style display-7"><a href="javascript:toSpecific('<?= base_url(); ?>BedroomCatalogue/roomProduct/Decorations')">
                             Decorations</a></h4>
                     </div>
                 </div>

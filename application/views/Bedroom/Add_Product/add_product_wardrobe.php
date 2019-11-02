@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10 align-center">
-                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">WARDROBE</h1>
+                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1" id="title"></h1>
             </div>
         </div>
     </div>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="col-md-12  form-group" data-for="name" style="color: white">
                             <label for="name-form1-53" class="form-control-label mbr-fonts-style display-7">Product's Category</label>
-                            <input type="text" name="productCategory" data-form-field="Name" required="required" class="form-control display-7" id="productCategory" readonly value="<?= $productCategory;?>">
+                            <input type="text" name="productCategory" data-form-field="Name" required="required" class="form-control display-7" id="productCategory" readonly value="">
                         </div>
                         <div class="col-md-12  form-group" data-for="name" style="color: white">
                             <label for="name-form1-53" class="form-control-label mbr-fonts-style display-7">Product Name</label>
@@ -72,7 +72,7 @@
                             <input type="file" name="uploadImage" data-form-field="Name" required="required" class="form-control" id="uploadImage" style="background-color: transparent;border: none;color: white;padding: 0px;margin-top: 10px" accept=".jpg, .png, .jpeg" multiple accept='image/*'>
                         </div>
                         <div class="col-md-12 input-group-btn">
-							<a href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/Wardrobe')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
+							<a href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory?>')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
                           	
 							<button type="submit" class="btn btn-primary btn-form-product display-4" style="border-radius: 20px!important">ADD NOW</button>
                         </div>
@@ -89,6 +89,26 @@
     </div>
 </section>
 <script>  
+	
+	window.onload = loadView;
+	
+	function stringSpace(string){
+		return string.replace(/%20/g," ");
+	}
+	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
+	}
+	
+	function loadView(){
+		var sub = stringSpace("<?=$productCategory?>");
+		var newSub = nReplacer(sub);
+		var subtitle = document.getElementById("title");
+		subtitle.innerHTML = newSub.toUpperCase();
+		
+		document.getElementById("productCategory").value = newSub;
+	}
+	
 	function isInputNumber(evt){
 		var ch = String.fromCharCode(evt.which);
 		if(!(/[0-9]/.test(ch))){
