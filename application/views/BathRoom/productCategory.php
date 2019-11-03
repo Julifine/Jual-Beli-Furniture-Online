@@ -1,14 +1,10 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
-
-    
-
-    <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);">
+<section class="header1 cid-rFjXY2naNZ mbr-parallax-background" id="header16-v">
+<div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);">
     </div>
-
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10 align-center">
-                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">BEDROOM</h1>
+                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">BATH ROOM</h1>
             </div>
         </div>
     </div>
@@ -70,7 +66,7 @@
 		subtitle.innerHTML = newSub.toUpperCase();
 		
 		var child = [];
-		firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
+		firebase.database().ref("products/Bathroom/"+newSub).once('value', function(snapshot) {
 
 			snapshot.forEach(function(childSnapshot) {
 				var childKey = childSnapshot.key;
@@ -129,7 +125,7 @@
 										for(var i=0;i<elements.length;i++){
 											document.getElementById("content-item-"+i).onclick = function() {
 												//console.log(this.dataset.tags);
-												window.location = '<?=base_url();?>BedroomCatalogue/detailProduct/'+sub+"/"+this.dataset.tags;
+												window.location = '<?=base_url();?>BathroomCatalogue/detailProduct/'+sub+"/"+this.dataset.tags;
 											};
 										}
 									}else{
@@ -139,7 +135,7 @@
 										for(var i=0;i<elements.length;i++){
 											document.getElementById("content-item-"+i).onclick = function() {
 												//console.log(this.dataset.tags);
-												window.location = '<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+sub+"/"+this.dataset.tags;
+												window.location = '<?=base_url();?>BathroomCatalogue/detailProductAdmin/'+sub+"/"+this.dataset.tags;
 											};
 										}
 									}
@@ -153,7 +149,7 @@
 						for(var i=0;i<elements.length;i++){
 							document.getElementById("content-item-"+i).onclick = function() {
 								//console.log(this.dataset.tags);
-								window.location = '<?=base_url();?>BedroomCatalogue/detailProduct/'+this.dataset.tags;
+								window.location = '<?=base_url();?>BathroomCatalogue/detailProduct/'+sub+"/"+this.dataset.tags;
 							};
 						}
 					}			
@@ -171,6 +167,6 @@
 	function stringSplit(kata_kata){
 		console.log(kata_kata);
 		var newString = kata_kata.replace(/%20/g," ");
-		return toOtherPage('<?=base_url();?>BedroomCatalogue/addProduct/'+newString);
+		return toOtherPage('<?=base_url();?>BathroomCatalogue/addProduct/'+newString);
 	}
 </script>

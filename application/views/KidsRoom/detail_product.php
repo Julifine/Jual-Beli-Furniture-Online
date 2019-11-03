@@ -1,4 +1,4 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
+<section class="header1 cid-rFjYrcuj0p mbr-parallax-background" id="header16-v">
 
     <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);">
     </div>
@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10 align-center">
-                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">BEDROOM</h1>
+                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">KIDS ROOM</h1>
             </div>
         </div>
     </div>
@@ -16,7 +16,8 @@
   <div class="container">
         <div class="row justify-content-center">
             <div class="title col-lg-12" style="color: white">
-				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/')">Bedroom</a> > <a class="link-nav" href="javascript:toOtherPageWspace('<?=$productCategory;?>')" id="productCategoryLink"></a> > <b id="productNameLink"></b></span>
+<!--              <h1>Wardrobe</h1>-->
+				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>KidsroomCatalogue/')">Kidsroom</a> > <a class="link-nav" href="javascript:toOtherPageWspace('<?=$productCategory;?>')" id="productCategoryLink"></a> > <b id="productNameLink"></b></span>
             </div>
         </div>
   </div>
@@ -43,16 +44,22 @@
 								<span id="stock" style="color: #808080;font-size: 18px"></span>
 							</div>
 						</div>
-						<div class="row" style="margin-top: 40px;">
-							<button onClick="toOtherPage('<?= base_url();?>BedroomCatalogue/editProduct/<?=$productCategory;?>/<?=$productName;?>')" id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: #D2C919;border: none;font-size: 24px;font-weight: bold">
-								<i class="fas fa-edit"></i>
-								Edit Product
-							</button>
+						<div class="row" style="margin-top: 20px;">
+							<div class="col-lg-4" style="transform: translateY(25%);padding: 0px">
+								<span >Amount Purchased :</span>
+							</div>
+							<div class="col-lg-8" style="padding: 0px;width: 100%;">
+								<div class="row">
+									<button onClick="minStock()" id="btn-stock-min" style="background-color: transparent;border: 2px white solid;color: white;font-size: 18px;padding: 10px;margin: 0px;font-weight: bold">-</button>
+									<input value="1" readonly id="input-stock" type="text" onKeyPress="isInputNumber(event)" style="background-color: transparent;border: none; border-top: 2px solid #808080;border-bottom: 2px solid #808080;padding: 10px;color: white;font-size: 18px;margin: 0px;text-align: center"> 
+									<button onClick="plusStock()" id="btn-stock-plus" style="background-color: transparent;border: 2px white solid;color: white;font-size: 18px;padding: 10px;margin: 0px;font-weight: bold">+</button>
+								</div>
+							</div>
 						</div>
-						<div class="row" style="margin-top: 20px">
-							<button onClick="deleteAlert()" id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: red;border: none;font-size: 24px;font-weight: bold">
-								<i class="fas fa-trash-alt"></i>
-								Delete Product
+						<div class="row" style="margin-top: 70px">
+							<button id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: #D2C919;border: none;font-size: 24px;font-weight: bold">
+								<i class="fas fa-cart-plus"></i>
+								Add to Cart
 							</button>
 						</div>
 					</div>
@@ -193,6 +200,18 @@
 </section>
 <script>  
 	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
+	}
+	
+	function stringSplit(string){
+		return string.replace(/%20/g," ");
+	}
+	
+	function stringParagraf(string){
+		return string.replace(/\n/g,"<br>");
+	}
+	
 	function detailProduct(){
 		var mainF = document.getElementById("btnMainF");
 		var productS = document.getElementById("btnProductS");
@@ -241,89 +260,36 @@
 		}
 	}
 	
-	function isInputNumber(evt){
-		var ch = String.fromCharCode(evt.which);
-		if(!(/[0-9]/.test(ch))){
-			evt.preventDefault();
+	function plusStock(){
+		console.log(document.getElementById("input-stock").value);
+		var value = parseInt(document.getElementById("input-stock").value);
+		var result = value + 1;
+		document.getElementById("input-stock").value = result;
+	}
+	
+	function minStock(){
+		console.log(document.getElementById("input-stock").value);
+		var value = document.getElementById("input-stock").value;
+		if (value != 1){
+			document.getElementById("input-stock").value = value-1;
 		}
-	}
-	
-	function deleteProduct(productName,productCategory){
-		var prodName = stringSplit(productName);
-		var prodCat = stringSplit(productCategory);
-		
-		var newProdName = nReplacer(prodName);
-		var newProdCat = nReplacer(prodCat);
-		var child = [];
-		firebase.database().ref("products/Bedroom/"+newProdCat).once('value', function(snapshot) {
-			snapshot.forEach(function(childSnapshot) {
-				var childKey = childSnapshot.key;
-				var childData = childSnapshot.val();
-				child.push(childData);
-			});
-			for(i = 0; i < child.length; i++){
-				if(newProdName == child[i].productName){
-					firebase.database().ref("products/" + child[i].roomCategory +"/"+ child[i].productCategory+"/"+child[i].productName).remove();
-					
-					firebase.storage().ref().child("products/" + child[i].roomCategory +"/"+ child[i].productCategory+"/"+child[i].productName+"/productImage.png").delete().then(function() {
-					  window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/"+nReplaceAnd(newProdCat);
-					}).catch(function(error) {
-					  console.log(error.message);
-					});
-				}
-			}
-		});
-	}
-	
-	function nReplaceAnd(string){
-		return string.replace(/ & /g," n ");
 	}
 	
 	var btnContainer = document.getElementById("myDIV");
-
-	// Get all buttons with class="btn" inside the container
 	var btns = btnContainer.getElementsByClassName("dropdown_menu");
-
-	// Loop through the buttons and add the active class to the current/clicked button
 	for (var i = 0; i < btns.length; i++) {
 	  btns[i].addEventListener("click", function() {
 		var current = document.getElementsByClassName("active");
-
-		// If there's no active class
 		if (current.length > 0) {
 		  current[0].className = current[0].className.replace(" active", "");
 		}
-
-		// Add the active class to the current/clicked button
 		this.className += " active";
 	  });
 	} 
 	
-	function toOtherPage(base_url){
-		window.location = base_url;
-	}
-	
-	function toOtherPageWspace(base_url){
-		var productCategory = stringSplit(base_url);
-		window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/"+productCategory;
-	}
-	
-	function stringSplit(string){
-		return string.replace(/%20/g," ");
-	}
-	
-	function stringParagraf(string){
-		return string.replace(/\n/g,"<br>");
-	}
-	
-	function nReplacer(string){
-		return string.replace(/ n /g," & ");
-	}
-	
 	window.onload = loadView;
 	
 	function loadView(){
-		
 		firebase.auth().onAuthStateChanged(function(user){
 			if	(user){
 				firebase.database().ref("users").once('value', function(snapshot) {
@@ -332,28 +298,24 @@
 						var childData = childSnapshot.val();
 						if(user.uid == childKey){
 							if(childData.type == "user"){
-								toOtherPage('<?= base_url();?>BedroomCatalogue');
-							}else{
 								const formatter = new Intl.NumberFormat('en-US', {
 								  style: 'currency',
 								  currency: 'IDR',
 								  minimumFractionDigits: 0
 								});
 
-								var sub = stringSplit("<?=$productCategory?>");
+								var sub = stringSplit('<?=$productCategory?>');
 								var productName = stringSplit("<?=$productName?>");
 
 								var newSub = nReplacer(sub);
-
 
 								document.getElementById("productCategoryLink").innerHTML = newSub;
 								document.getElementById("productNameLink").innerHTML = productName;
 
 
 								if (productName != null){
-									console.log(productName);
 									var child = [];
-									firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
+									firebase.database().ref("products/Kidsroom/"+newSub).once('value', function(snapshot) {
 										snapshot.forEach(function(childSnapshot) {
 											var childKey = childSnapshot.key;
 											var childData = childSnapshot.val();
@@ -374,27 +336,87 @@
 												break;
 											}else{
 												if(productName != child[i].productName && i == child.length-1){
-													window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+													window.location = "<?= base_url();?>KidsroomCatalogue/roomProduct/<?=$productCategory;?>";
 												}
 											}
 										}
 										}else{
-											window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+											window.location = "<?= base_url();?>KidsroomCatalogue/roomProduct/<?=$productCategory;?>";
 										}
 									});
 								}
 								detailProduct();
+							}else{
+								//toOtherPage('<?= base_url();?>KidsroomCatalogue');
 							}
 						}
 					});
 				});
 			}else{
-				toOtherPage('<?= base_url();?>BedroomCatalogue');
+				const formatter = new Intl.NumberFormat('en-US', {
+				  style: 'currency',
+				  currency: 'IDR',
+				  minimumFractionDigits: 0
+				});
+
+				var sub = stringSplit('<?=$productCategory?>');
+				var productName = stringSplit("<?=$productName?>");
+
+				var newSub = nReplacer(sub);
+
+				document.getElementById("productCategoryLink").innerHTML = newSub;
+				document.getElementById("productNameLink").innerHTML = productName;
+
+
+				if (productName != null){
+					var child = [];
+					firebase.database().ref("products/Kidsroom/"+newSub).once('value', function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+							child.push(childData);
+						});
+						if(child.length != 0){
+							for(i = 0; i < child.length; i++){
+							if(productName == child[i].productName){
+								var priced = formatter.format(child[i].price);		
+								document.getElementById("productName").innerHTML = child[i].productName;
+								document.getElementById("price").innerHTML = priced;
+								document.getElementById("stock").innerHTML = child[i].stock+" stock available and ready to deliver";
+								document.getElementById("desc").innerHTML = stringParagraf(child[i].desc);
+								document.getElementById("productImage").src = child[i].productImage;
+								document.getElementById("productImage").style.height = "500px";
+								document.getElementById("productImage").style.width = "500px";
+								document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+productName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
+								break;
+							}else{
+								if(productName != child[i].productName && i == child.length-1){
+									window.location = "<?= base_url();?>KidsroomCatalogue/roomProduct/<?=$productCategory;?>";
+								}
+							}
+						}
+						}else{
+							window.location = "<?= base_url();?>KidsroomCatalogue/roomProduct/<?=$productCategory;?>";
+						}
+					});
+				}
+				detailProduct();
+				var btn_add = document.getElementById("btn-add-cart");
+				btn_add.onclick = function(){
+					deleteAlert();
+				}
 			}			
 		});
-		
 	}
-            
+	
+	function toOtherPage(base_url){
+		window.location = base_url;
+	}
+	
+	function toOtherPageWspace(base_url){
+		var productCategory = stringSplit(base_url);
+		window.location = "<?= base_url();?>KidsroomCatalogue/roomProduct/"+productCategory;
+	}
 	
 	function deleteAlert(){
 		const swalWithBootstrapButtons = Swal.mixin({
@@ -406,31 +428,30 @@
 		})
 
 		swalWithBootstrapButtons.fire({
-		  title: 'Are you sure?',
-		  text: "You won't be able to revert this!",
+		  title: 'You are not logged in',
+		  text: "You must be logged in to be able add an items to your cart",
 		  type: 'warning',
 		  showCancelButton: true,
-		  confirmButtonText: 'Yes, delete it!',
-		  cancelButtonText: 'No, cancel!',
+		  confirmButtonText: 'Login now',
+		  cancelButtonText: 'No, cancel',
 		  reverseButtons: true
 		}).then((result) => {
-		  if (result.value) {
-			swalWithBootstrapButtons.fire(
-			  'Deleted!',
-			  'Your file has been deleted.',
-			  'success'
-			);
-			  deleteProduct('<?= $productName;?>','<?= $productCategory;?>');
-		  } else if (
-			/* Read more about handling dismissals below */
-			result.dismiss === Swal.DismissReason.cancel
-		  ) {
+		  if (result.dismiss === Swal.DismissReason.cancel) {
 			swalWithBootstrapButtons.fire(
 			  'Cancelled',
-			  'Your imaginary file is safe :)',
+			  '',
 			  'error'
 			)
+		  }else if (result.dismiss){
+			  swalWithBootstrapButtons.fire(
+				  'Cancelled',
+				  '',
+				  'error'
+			  );
+		  }else{
+			  toOtherPage('<?= base_url();?>Landing/login');
 		  }
 		});
-	}
+	}	
+            
 </script>

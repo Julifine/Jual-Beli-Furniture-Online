@@ -1,7 +1,4 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
-
-    
-
+<section class="header1 cid-rFjTwI9zWU mbr-parallax-background" id="header16-v">
     <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);">
     </div>
 
@@ -29,7 +26,7 @@
                 <!---Formbuilder Form--->
 				<!--<div class="alert alert-warning" role="alert" id="alert-warn" style="display: none">
 				</div>-->
-                <form method="POST" class="mbr-form form-with-styler" id="addProductWardrobe">
+                <form method="POST" class="mbr-form form-with-styler" id="addProduct">
                   <input type="hidden" name="email" data-form-email="true" value="">
                     <div class="row">
                         <div hidden="hidden" data-form-alert="" class="alert alert-success col-12">Thanks for filling out the form!</div>
@@ -72,7 +69,7 @@
                             <input type="file" name="uploadImage" data-form-field="Name" required="required" class="form-control" id="uploadImage" style="background-color: transparent;border: none;color: white;padding: 0px;margin-top: 10px" accept=".jpg, .png, .jpeg" multiple accept='image/*'>
                         </div>
                         <div class="col-md-12 input-group-btn">
-							<a href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory?>')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
+							<a href="javascript:toOtherPage('<?= base_url();?>WorkroomCatalogue/roomProduct/<?=$productCategory?>')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
                           	
 							<button type="submit" class="btn btn-primary btn-form-product display-4" style="border-radius: 20px!important">ADD NOW</button>
                         </div>
@@ -101,12 +98,30 @@
 	}
 	
 	function loadView(){
-		var sub = stringSpace("<?=$productCategory?>");
-		var newSub = nReplacer(sub);
-		var subtitle = document.getElementById("title");
-		subtitle.innerHTML = newSub.toUpperCase();
-		
-		document.getElementById("productCategory").value = newSub;
+		firebase.auth().onAuthStateChanged(function(user){
+			if	(user){
+				firebase.database().ref("users").once('value', function(snapshot) {
+					snapshot.forEach(function(childSnapshot) {
+						var childKey = childSnapshot.key;
+						var childData = childSnapshot.val();
+						if(user.uid == childKey){
+							if(childData.type == "user"){
+								window.location = "<?= base_url();?>WorkroomCatalogue/roomProduct/<?=$productCategory;?>";	
+							}else{
+								var sub = stringSpace("<?=$productCategory?>");
+								var newSub = nReplacer(sub);
+								var subtitle = document.getElementById("title");
+								subtitle.innerHTML = newSub.toUpperCase();
+
+								document.getElementById("productCategory").value = newSub;
+							}
+						}
+					});
+				});
+			}else{
+				window.location = "<?= base_url();?>WorkroomCatalogue/roomProduct/<?=$productCategory;?>";	
+			}			
+		});
 	}
 	
 	function isInputNumber(evt){
@@ -155,7 +170,7 @@
 	  return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
 	}
 	
-	const addProductForm = document.querySelector('#addProductWardrobe');
+	const addProductForm = document.querySelector('#addProduct');
 	addProductForm.addEventListener('submit',(e) => {
 		e.preventDefault();
 
@@ -166,48 +181,61 @@
 		var stock = addProductForm['stock'].value;
 		var desc = addProductForm['desc'].value;
 		var filename = selectedFile.name;
-//		var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/"+filename);
 		var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/productImage.png");
-		var uploadTask = storageRef.put(selectedFile);
 		
-		var priced = formatString(price,"IDR ");
-		
-		uploadTask.on('state_changed',function(snapshot){
-			var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-			document.getElementById('alert-warn').style.display = "block";
-			document.getElementById('alert-message').innerHTML = 'Upload is ' + progress + '% done';
-			  switch (snapshot.state) {
-				case firebase.storage.TaskState.PAUSED: // or 'paused'
-				  console.log('Upload is paused');
-				  break;
-				case firebase.storage.TaskState.RUNNING: // or 'running'
-				  console.log('Upload is running');
-				  break;
-			  }
-		},function(error){
-			
-		},function(){
-			uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-				console.log('File available at', downloadURL);
-				var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName);
-				firebaseRef.set({
-					roomCategory: roomCategory,
-					productCategory: productCategory,
-					productName:productName,
-					price: priced,
-					stock: stock,
-					desc: desc,
-					productImage: downloadURL
-				}, function(error) {
-					if (error) {
-					  // The write failed...
-					} else {
-					  // Data saved successfully!
-						document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
-						addProductForm.reset();
-					}
-				  });
+		firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName).once('value', function(snapshot) {
+			var child = [];
+			snapshot.forEach(function(childSnapshot) {
+				var childKey = childSnapshot.key;
+				var childData = childSnapshot.val();
+				child.push(childData);
 			});
+			if (child.length != 0){
+				alert('Product Name Already Taken!');
+			}else{
+				var uploadTask = storageRef.put(selectedFile);
+		
+				var priced = formatString(price,"IDR ");
+
+				uploadTask.on('state_changed',function(snapshot){
+					var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+					document.getElementById('alert-warn').style.display = "block";
+					document.getElementById('alert-message').innerHTML = 'Upload is ' + progress + '% done';
+					  switch (snapshot.state) {
+						case firebase.storage.TaskState.PAUSED: // or 'paused'
+						  console.log('Upload is paused');
+						  break;
+						case firebase.storage.TaskState.RUNNING: // or 'running'
+						  console.log('Upload is running');
+						  break;
+					  }
+				},function(error){
+
+				},function(){
+					uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+						console.log('File available at', downloadURL);
+						var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName);
+						firebaseRef.set({
+							roomCategory: roomCategory,
+							productCategory: productCategory,
+							productName:productName,
+							price: priced,
+							stock: stock,
+							desc: desc,
+							productImage: downloadURL
+						}, function(error) {
+							if (error) {
+							  // The write failed...
+							} else {
+							  // Data saved successfully!
+								document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
+								//addProductForm.reset();
+								document.location.reload(true);
+							}
+						  });
+					});
+				});
+			}
 		});
 	});
 	

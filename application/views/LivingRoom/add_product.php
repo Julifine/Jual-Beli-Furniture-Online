@@ -1,4 +1,4 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
+<section class="header1 cid-rFeMqEHElF mbr-parallax-background" id="header16-v">
 
     
 
@@ -18,7 +18,7 @@
   <div class="container">
         <div class="row justify-content-center">
             <div class="title col-12 col-lg-8" style="color: white">
-              <h1>EDIT PRODUCT</h1>
+              <h1>ADD PRODUCT</h1>
             </div>
         </div>
   </div>
@@ -43,11 +43,11 @@
                         </div>
                         <div class="col-md-12  form-group" data-for="name" style="color: white">
                             <label for="name-form1-53" class="form-control-label mbr-fonts-style display-7">Product's Category</label>
-                            <input type="text" name="productCategory" data-form-field="Name" required="required" class="form-control display-7" id="productCategory" readonly value="<?= $productCategory;?>">
+                            <input type="text" name="productCategory" data-form-field="Name" required="required" class="form-control display-7" id="productCategory" readonly value="">
                         </div>
                         <div class="col-md-12  form-group" data-for="name" style="color: white">
                             <label for="name-form1-53" class="form-control-label mbr-fonts-style display-7">Product Name</label>
-                            <input type="text" name="productName" data-form-field="Name" required="required" class="form-control display-7" id="productName" readonly>
+                            <input type="text" name="productName" data-form-field="Name" required="required" class="form-control display-7" id="productName">
                         </div>
                         <div class="col-md-12  form-group" data-for="name" style="color: white">
                             <label for="name-form1-53" class="form-control-label mbr-fonts-style display-7">Price</label>
@@ -68,11 +68,11 @@
                         </div>
 						<div data-for="message" class="col-md-12 form-group" style="color: white">
                             <label for="message-form1-53" class="form-control-label mbr-fonts-style display-7">Product Image</label>
-							<img id="productImage" src="<?= base_url(); ?>assets/bg/no_image.jpg" alt="" class="form-control" style="height: 200px;width: 200px;padding: 0px" id="productImage">
-                            <input type="file" name="uploadImage" data-form-field="Name" class="form-control" id="uploadImage" style="background-color: transparent;border: none;color: white;padding: 0px;margin-top: 10px" accept=".jpg, .png, .jpeg" multiple accept='image/*'>
+							<img src="<?= base_url(); ?>assets/bg/no_image.jpg" alt="" class="form-control" style="height: 200px;width: 200px;padding: 0px" id="productImage">
+                            <input type="file" name="uploadImage" data-form-field="Name" required="required" class="form-control" id="uploadImage" style="background-color: transparent;border: none;color: white;padding: 0px;margin-top: 10px" accept=".jpg, .png, .jpeg" multiple accept='image/*'>
                         </div>
                         <div class="col-md-12 input-group-btn">
-							<a href="javascript:stringSplit('<?=$productName;?>','<?=$productCategory;?>')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
+							<a href="javascript:toOtherPage('<?= base_url();?>LivingroomCatalogue/roomProduct/<?=$productCategory?>')" id="btn-cancel" class="btn btn-primary btn-form-product display-4" style="margin-right: 10px;background-color: #808080!important;border:#808080 solid!important;color: white!important;border-radius: 20px!important">CANCEL</a>
                           	
 							<button type="submit" class="btn btn-primary btn-form-product display-4" style="border-radius: 20px!important">ADD NOW</button>
                         </div>
@@ -89,9 +89,46 @@
     </div>
 </section>
 <script>  
+	
+	window.onload = loadView;
+	
+	function stringSpace(string){
+		return string.replace(/%20/g," ");
+	}
+	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
+	}
+	
+	function loadView(){
+		firebase.auth().onAuthStateChanged(function(user){
+			if	(user){
+				firebase.database().ref("users").once('value', function(snapshot) {
+					snapshot.forEach(function(childSnapshot) {
+						var childKey = childSnapshot.key;
+						var childData = childSnapshot.val();
+						if(user.uid == childKey){
+							if(childData.type == "user"){
+								window.location = "<?= base_url();?>LivingroomCatalogue/roomProduct/<?=$productCategory;?>";	
+							}else{
+								var sub = stringSpace("<?=$productCategory?>");
+								var newSub = nReplacer(sub);
+								var subtitle = document.getElementById("title");
+								subtitle.innerHTML = newSub.toUpperCase();
+
+								document.getElementById("productCategory").value = newSub;
+							}
+						}
+					});
+				});
+			}else{
+				window.location = "<?= base_url();?>LivingroomCatalogue/roomProduct/<?=$productCategory;?>";	
+			}			
+		});
+	}
+	
 	function isInputNumber(evt){
 		var ch = String.fromCharCode(evt.which);
-				
 		if(!(/[0-9]/.test(ch))){
 			evt.preventDefault();
 		}
@@ -136,70 +173,33 @@
 	  return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
 	}
 	
-	var selectedFile;
-	
-	$("#uploadImage").change(function () {
-		if(this.files[0].name.match(".jp") || this.files[0].name.match(".png")){
-			selectedFile = this.files[0];
-			if (this.files && this.files[0]) {
-				var reader = new FileReader();
-				reader.onload = function (e) {
-					$('#productImage').attr('src', e.target.result);
-				}
-				reader.readAsDataURL(this.files[0]);
-			}
-		}else if(this.files[0] == null){
-			selectedFile =  null;
-		}else{
-			alert("Sorry only jpeg images are accepted");
-			document.getElementById("uploadImage").value=""; //clear the uploaded file
-		}
-		
-	});
-	
-	function stringSplit(kata_kata,kata_kata_1){
-		var newString = kata_kata.replace(/%20/g," ");
-		var newString1 = kata_kata_1.replace(/%20/g," ");
-		return toOtherPage('<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+newString1+"/"+newString);
-	}
-	
-	function stringSpace(string){
-		return string.replace(/%20/g," ");
-	}
-	
-	function nReplacer(string){
-		return string.replace(/ n /g," & ");
-	}
-	
-	function nReplaceAnd(string){
-		return string.replace(/ & /g," n ");
-	}
-	
 	const addProductForm = document.querySelector('#addProduct');
 	addProductForm.addEventListener('submit',(e) => {
 		e.preventDefault();
 
-		var prodCat = stringSpace('<?=$productCategory;?>');
-		var newProdCat = nReplacer(prodCat);
-		var prodName = stringSpace('<?=$productName;?>');
-		var newProdName = nReplacer(prodName);
-		
 		var roomCategory = addProductForm['roomCategory'].value;
 		var productCategory = addProductForm['productCategory'].value;
 		var productName = addProductForm['productName'].value;
 		var price = addProductForm['price'].value;
 		var stock = addProductForm['stock'].value;
 		var desc = addProductForm['desc'].value;
+		var filename = selectedFile.name;
+		var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/productImage.png");
 		
-		var priced = formatString(price,"IDR ");
-		
-		console.log(parseInt(priced));
-		if(priced > 0){
-			if (selectedFile != null){
-				var filename = selectedFile.name;
-				//var filename = addProductForm['uploadImage'].value;
-				var storageRef = firebase.storage().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName+"/productImage.png");
+		firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName).once('value', function(snapshot) {
+			var child = [];
+			snapshot.forEach(function(childSnapshot) {
+				var childKey = childSnapshot.key;
+				var childData = childSnapshot.val();
+				child.push(childData);
+			});
+			if (child.length != 0){
+				alert('Product Name Already Taken!');
+			}else{
 				var uploadTask = storageRef.put(selectedFile);
+		
+				var priced = formatString(price,"IDR ");
+
 				uploadTask.on('state_changed',function(snapshot){
 					var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 					document.getElementById('alert-warn').style.display = "block";
@@ -217,8 +217,8 @@
 				},function(){
 					uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
 						console.log('File available at', downloadURL);
-						var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/");
-						firebaseRef.child(productName).update({
+						var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/"+productName);
+						firebaseRef.set({
 							roomCategory: roomCategory,
 							productCategory: productCategory,
 							productName:productName,
@@ -232,107 +232,36 @@
 							} else {
 							  // Data saved successfully!
 								document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
-								if (productName != newProdName){
-									firebaseRef.child(newProdName).remove();
-									firebase.storage().ref("products/" + roomCategory +"/"+ newProdCat+"/"+newProdName+"/productImage.png").delete();
-								}
-								window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
+								//addProductForm.reset();
+								document.location.reload(true);
 							}
-						});
+						  });
 					});
 				});
-			}else{
-				var imageURL = document.getElementById("productImage").src;
-				var firebaseRef = firebase.database().ref("products/" + roomCategory +"/"+ productCategory+"/");
-				firebaseRef.child(productName).update({
-					roomCategory: roomCategory,
-					productCategory: productCategory,
-					productName:productName,
-					price: priced,
-					stock: stock,
-					desc: desc,
-					productImage: imageURL
-				}, function(error) {
-					if (error) {
-					  // The write failed...
-					} else {
-					  // Data saved successfully!
-						document.getElementById("productImage").src = "<?= base_url(); ?>assets/bg/no_image.jpg";
-						if (productName != newProdName){
-							firebaseRef.child(newProdName).remove();
-						}
-						window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
-					}
-				});
 			}
-		}else{
-			alert("Price can't zero!");
+		});
+	});
+	
+	$("#uploadImage").change(function () {
+		if(this.files[0].name.match(".jp") || this.files[0].name.match(".png")){
+			selectedFile = this.files[0];
+			if (this.files && this.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					$('#productImage').attr('src', e.target.result);
+				}
+				reader.readAsDataURL(this.files[0]);
+			}
 		}
+		else
+		{
+			alert("Sorry only jpeg images are accepted");
+			document.getElementById("uploadImage").value=""; //clear the uploaded file
+		}
+		
 	});
 	
 	function toOtherPage(base_url){
 		window.location = base_url;
-	}
-	window.onload = loadView;
-	
-	function loadView(){
-		
-		var sub = stringSpace("<?=$productCategory?>");
-		var newSub = nReplacer(sub);
-		var subtitle = document.getElementById("title");
-		subtitle.innerHTML = newSub.toUpperCase();
-		
-		document.getElementById("productCategory").value = newSub;
-		
-		var productName = stringSpace('<?php echo $productName;?>');
-		var productCategory = stringSpace('<?php echo $productCategory;?>');
-		var newProductCategory = nReplacer(productCategory);
-		
-		document.getElementById("title").innerHTML = newProductCategory.toUpperCase();
-		
-		if (productName != null){
-			console.log(productName);
-			var child = [];
-			firebase.database().ref("products/Bedroom/"+newProductCategory).once('value', function(snapshot) {
-				snapshot.forEach(function(childSnapshot) {
-					var childKey = childSnapshot.key;
-					var childData = childSnapshot.val();
-					child.push(childData);
-				});
-				if(child.length != 0){
-					for(i = 0; i < child.length; i++){
-						if(productName == child[i].productName){
-							document.getElementById("roomCategory").value = child[i].roomCategory;
-							document.getElementById("productCategory").value = child[i].productCategory;
-							document.getElementById("productName").value = child[i].productName;
-							document.getElementById("price").value = formatRupiah(child[i].price, "IDR ");
-							document.getElementById("stock").value = child[i].stock;
-							document.getElementById("desc").value = child[i].desc;
-							document.getElementById("productImage").src = child[i].productImage;
-							break;
-						}else{
-							console.log('testis');
-							if(productName != child[i].productName && i == child.length-1){
-								window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
-							}
-						}
-					}
-				}else{
-					window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
-				}
-					/*if(productName == childKey){
-						document.getElementById("roomCategory").value = childData.roomCategory;
-						document.getElementById("productCategory").value = childData.productCategory;
-						document.getElementById("productName").value = childData.productName;
-						document.getElementById("price").value = formatRupiah(childData.price, "IDR ");
-						document.getElementById("stock").value = childData.stock;
-						document.getElementById("desc").value = childData.desc;
-						document.getElementById("productImage").src = childData.productImage;
-					}*/
-			});
-		}
-	}
-	
-	
-            
+	}     
 </script>

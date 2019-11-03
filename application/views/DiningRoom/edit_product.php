@@ -1,10 +1,6 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
-
-    
-
+<section class="header1 cid-rFjQ0sTkdr mbr-parallax-background" id="header16-v">
     <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);">
     </div>
-
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10 align-center">
@@ -160,7 +156,7 @@
 	function stringSplit(kata_kata,kata_kata_1){
 		var newString = kata_kata.replace(/%20/g," ");
 		var newString1 = kata_kata_1.replace(/%20/g," ");
-		return toOtherPage('<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+newString1+"/"+newString);
+		return toOtherPage('<?=base_url();?>DiningroomCatalogue/detailProductAdmin/'+newString1+"/"+newString);
 	}
 	
 	function stringSpace(string){
@@ -236,7 +232,7 @@
 									firebaseRef.child(newProdName).remove();
 									firebase.storage().ref("products/" + roomCategory +"/"+ newProdCat+"/"+newProdName+"/productImage.png").delete();
 								}
-								window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
+								window.location = '<?= base_url();?>DiningroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
 							}
 						});
 					});
@@ -261,7 +257,7 @@
 						if (productName != newProdName){
 							firebaseRef.child(newProdName).remove();
 						}
-						window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
+						window.location = '<?= base_url();?>DiningroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
 					}
 				});
 			}
@@ -293,7 +289,7 @@
 		if (productName != null){
 			console.log(productName);
 			var child = [];
-			firebase.database().ref("products/Bedroom/"+newProductCategory).once('value', function(snapshot) {
+			firebase.database().ref("products/Diningroom/"+newProductCategory).once('value', function(snapshot) {
 				snapshot.forEach(function(childSnapshot) {
 					var childKey = childSnapshot.key;
 					var childData = childSnapshot.val();
@@ -311,14 +307,13 @@
 							document.getElementById("productImage").src = child[i].productImage;
 							break;
 						}else{
-							console.log('testis');
 							if(productName != child[i].productName && i == child.length-1){
-								window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+								window.location = "<?= base_url();?>DiningroomCatalogue/roomProduct/<?=$productCategory;?>";
 							}
 						}
 					}
 				}else{
-					window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+					window.location = "<?= base_url();?>DiningroomCatalogue/roomProduct/<?=$productCategory;?>";
 				}
 					/*if(productName == childKey){
 						document.getElementById("roomCategory").value = childData.roomCategory;

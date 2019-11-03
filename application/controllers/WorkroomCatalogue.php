@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-class BedroomCatalogue extends CI_Controller {
+class WorkroomCatalogue extends CI_Controller {
 
 	public function index()
 	{
-		$data['judul'] = 'Bedroom';
+		$data['judul'] = 'Workroom';
 		$this->load->view('Header/headers',$data);
-		$this->load->view('Bedroom/bedroom_home');
+		$this->load->view('WorkRoom/workroom_home');
 		$this->load->view('Footer/footers');
 	}
 	
@@ -14,17 +14,17 @@ class BedroomCatalogue extends CI_Controller {
 	{
 		$data['judul'] = $productCategory;
 		$this->load->view('Header/headers',$data);
-		$this->load->view('Bedroom/productCategory');
+		$this->load->view('WorkRoom/productCategory');
 		$this->load->view('Footer/footers');
 	}
 	
 	public function detailProduct($productCategory,$productName)
 	{
 		$data['judul'] = 'Detail Product';
-		$data['productName'] = $productName;		
+		$data['productName'] = $productName;
 		$data['productCategory'] = $productCategory;
 		$this->load->view('Header/headers',$data);
-		$this->load->view('Bedroom/detail_product');
+		$this->load->view('WorkRoom/detail_product');
 		$this->load->view('Footer/footers');
 	}
 	
@@ -34,28 +34,28 @@ class BedroomCatalogue extends CI_Controller {
 		$data['productName'] = $productName;
 		$data['productCategory'] = $productCategory;
 		$this->load->view('Header/headers',$data);
-		$this->load->view('Bedroom/detail_product_admin');
+		$this->load->view('WorkRoom/detail_product_admin');
 		$this->load->view('Footer/footers');
 	}
 	
 	public function addProduct($productCategory)
 	{
 		$data['judul'] = 'Add Product';
-		$data['roomCategory'] = 'Bedroom';
+		$data['roomCategory'] = 'Workroom';
 		$data['productCategory'] = $productCategory;
 		$this->load->view('Header/headers',$data);
-		$this->load->view('Bedroom/add_product.php');
+		$this->load->view('WorkRoom/add_product.php');
 		$this->load->view('Footer/footers');
 	}
 	
 	public function editProduct($productCategory,$productName)
 	{
 		$data['judul'] = 'Edit Product';
-		$data['roomCategory'] = 'Bedroom';
+		$data['roomCategory'] = 'Workroom';
 		$data['productCategory'] = $productCategory;
 		$data['productName'] = $productName;
 		$this->load->view('Header/headers',$data);
-		$this->load->view('Bedroom/edit_product.php');
+		$this->load->view('WorkRoom/edit_product.php');
 		$this->load->view('Footer/footers');
 	}
 }

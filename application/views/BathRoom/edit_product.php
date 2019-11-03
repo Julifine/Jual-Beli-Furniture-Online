@@ -1,4 +1,4 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
+<section class="header1 cid-rFjXY2naNZ mbr-parallax-background" id="header16-v">
 
     
 
@@ -160,7 +160,7 @@
 	function stringSplit(kata_kata,kata_kata_1){
 		var newString = kata_kata.replace(/%20/g," ");
 		var newString1 = kata_kata_1.replace(/%20/g," ");
-		return toOtherPage('<?=base_url();?>BedroomCatalogue/detailProductAdmin/'+newString1+"/"+newString);
+		return toOtherPage('<?=base_url();?>BathroomCatalogue/detailProductAdmin/'+newString1+"/"+newString);
 	}
 	
 	function stringSpace(string){
@@ -236,7 +236,7 @@
 									firebaseRef.child(newProdName).remove();
 									firebase.storage().ref("products/" + roomCategory +"/"+ newProdCat+"/"+newProdName+"/productImage.png").delete();
 								}
-								window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
+								window.location = '<?= base_url();?>BathroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
 							}
 						});
 					});
@@ -261,7 +261,7 @@
 						if (productName != newProdName){
 							firebaseRef.child(newProdName).remove();
 						}
-						window.location = '<?= base_url();?>BedroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
+						window.location = '<?= base_url();?>BathroomCatalogue/detailProductAdmin/'+nReplaceAnd(productCategory)+"/"+productName;
 					}
 				});
 			}
@@ -293,7 +293,7 @@
 		if (productName != null){
 			console.log(productName);
 			var child = [];
-			firebase.database().ref("products/Bedroom/"+newProductCategory).once('value', function(snapshot) {
+			firebase.database().ref("products/Bathroom/"+newProductCategory).once('value', function(snapshot) {
 				snapshot.forEach(function(childSnapshot) {
 					var childKey = childSnapshot.key;
 					var childData = childSnapshot.val();
@@ -313,12 +313,12 @@
 						}else{
 							console.log('testis');
 							if(productName != child[i].productName && i == child.length-1){
-								window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+								window.location = "<?= base_url();?>BathroomCatalogue/roomProduct/<?=$productCategory;?>";
 							}
 						}
 					}
 				}else{
-					window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+					window.location = "<?= base_url();?>BathroomCatalogue/roomProduct/<?=$productCategory;?>";
 				}
 					/*if(productName == childKey){
 						document.getElementById("roomCategory").value = childData.roomCategory;

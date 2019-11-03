@@ -1,4 +1,4 @@
-<section class="header1 cid-rFeBrAMgWL mbr-parallax-background" id="header16-v">
+<section class="header1 cid-rFjYxjhEtJ mbr-parallax-background" id="header16-v">
 
     <div class="mbr-overlay" style="opacity: 0.5; background-color: rgb(0, 0, 0);">
     </div>
@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-md-center">
             <div class="col-md-10 align-center">
-                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">BEDROOM</h1>
+                <h1 class="mbr-section-title mbr-bold pb-3 mbr-fonts-style display-1">OUTDOOR</h1>
             </div>
         </div>
     </div>
@@ -16,7 +16,7 @@
   <div class="container">
         <div class="row justify-content-center">
             <div class="title col-lg-12" style="color: white">
-				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/')">Bedroom</a> > <a class="link-nav" href="javascript:toOtherPageWspace('<?=$productCategory;?>')" id="productCategoryLink"></a> > <b id="productNameLink"></b></span>
+				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>OutdoorCatalogue/')">Outdoor</a> > <a class="link-nav" href="javascript:toOtherPageWspace('<?=$productCategory;?>')" id="productCategoryLink"></a> > <b id="productNameLink"></b></span>
             </div>
         </div>
   </div>
@@ -44,7 +44,7 @@
 							</div>
 						</div>
 						<div class="row" style="margin-top: 40px;">
-							<button onClick="toOtherPage('<?= base_url();?>BedroomCatalogue/editProduct/<?=$productCategory;?>/<?=$productName;?>')" id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: #D2C919;border: none;font-size: 24px;font-weight: bold">
+							<button onClick="toOtherPage('<?= base_url();?>OutdoorCatalogue/editProduct/<?=$productCategory;?>/<?=$productName;?>')" id="btn-add-cart" style="width: 100%;padding: 10px;border-radius: 16px;background-color: #D2C919;border: none;font-size: 24px;font-weight: bold">
 								<i class="fas fa-edit"></i>
 								Edit Product
 							</button>
@@ -255,7 +255,7 @@
 		var newProdName = nReplacer(prodName);
 		var newProdCat = nReplacer(prodCat);
 		var child = [];
-		firebase.database().ref("products/Bedroom/"+newProdCat).once('value', function(snapshot) {
+		firebase.database().ref("products/Outdoor/"+newProdCat).once('value', function(snapshot) {
 			snapshot.forEach(function(childSnapshot) {
 				var childKey = childSnapshot.key;
 				var childData = childSnapshot.val();
@@ -266,7 +266,7 @@
 					firebase.database().ref("products/" + child[i].roomCategory +"/"+ child[i].productCategory+"/"+child[i].productName).remove();
 					
 					firebase.storage().ref().child("products/" + child[i].roomCategory +"/"+ child[i].productCategory+"/"+child[i].productName+"/productImage.png").delete().then(function() {
-					  window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/"+nReplaceAnd(newProdCat);
+					  window.location = "<?= base_url();?>OutdoorCatalogue/roomProduct/"+nReplaceAnd(newProdCat);
 					}).catch(function(error) {
 					  console.log(error.message);
 					});
@@ -305,7 +305,7 @@
 	
 	function toOtherPageWspace(base_url){
 		var productCategory = stringSplit(base_url);
-		window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/"+productCategory;
+		window.location = "<?= base_url();?>OutdoorCatalogue/roomProduct/"+productCategory;
 	}
 	
 	function stringSplit(string){
@@ -332,7 +332,7 @@
 						var childData = childSnapshot.val();
 						if(user.uid == childKey){
 							if(childData.type == "user"){
-								toOtherPage('<?= base_url();?>BedroomCatalogue');
+								toOtherPage('<?= base_url();?>OutdoorCatalogue');
 							}else{
 								const formatter = new Intl.NumberFormat('en-US', {
 								  style: 'currency',
@@ -353,7 +353,7 @@
 								if (productName != null){
 									console.log(productName);
 									var child = [];
-									firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
+									firebase.database().ref("products/Outdoor/"+newSub).once('value', function(snapshot) {
 										snapshot.forEach(function(childSnapshot) {
 											var childKey = childSnapshot.key;
 											var childData = childSnapshot.val();
@@ -374,12 +374,12 @@
 												break;
 											}else{
 												if(productName != child[i].productName && i == child.length-1){
-													window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+													window.location = "<?= base_url();?>OutdoorCatalogue/roomProduct/<?=$productCategory;?>";
 												}
 											}
 										}
 										}else{
-											window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+											window.location = "<?= base_url();?>OutdoorCatalogue/roomProduct/<?=$productCategory;?>";
 										}
 									});
 								}
@@ -389,7 +389,7 @@
 					});
 				});
 			}else{
-				toOtherPage('<?= base_url();?>BedroomCatalogue');
+				toOtherPage('<?= base_url();?>OutdoorCatalogue');
 			}			
 		});
 		

@@ -17,7 +17,7 @@
         <div class="row justify-content-center">
             <div class="title col-lg-12" style="color: white">
 <!--              <h1>Wardrobe</h1>-->
-				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/')">Bedroom</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/Wardrobe')">Wardrobe</a> > <b id="productNameLink"></b></span>
+				<span><a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>')">Home</a> > <a class="link-nav" href="javascript:toOtherPage('<?= base_url();?>BedroomCatalogue/')">Bedroom</a> > <a class="link-nav" href="javascript:toOtherPageWspace('<?=$productCategory;?>')" id="productCategoryLink"></a> > <b id="productNameLink"></b></span>
             </div>
         </div>
   </div>
@@ -198,7 +198,19 @@
         </div>
     </div>
 </section>
-<script>  
+<script> 
+	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
+	}
+	
+	function stringSplit(string){
+		return string.replace(/%20/g," ");
+	}
+	
+	function stringParagraf(string){
+		return string.replace(/\n/g,"<br>");
+	}
 	
 	function detailProduct(){
 		var mainF = document.getElementById("btnMainF");
@@ -278,59 +290,180 @@
 	window.onload = loadView;
 	
 	function loadView(){
-		const formatter = new Intl.NumberFormat('en-US', {
-		  style: 'currency',
-		  currency: 'IDR',
-		  minimumFractionDigits: 0
-		});
-		
-		document.getElementById("productNameLink").innerHTML = stringSplit('<?= $productName;?>');
-		
-		var productName = '<?php echo $productName;?>';
-		if (productName != null){
-			console.log(productName);
-			var newProductName = productName.replace(/%20/g," ");
-			var child = [];
-			firebase.database().ref("products/Bedroom/Wardrobe/").once('value', function(snapshot) {
-				snapshot.forEach(function(childSnapshot) {
-					var childKey = childSnapshot.key;
-					var childData = childSnapshot.val();
-					child.push(childData);
-				});
-				for(i = 0; i < child.length; i++){
-					if(newProductName == child[i].productName){
-						var priced = formatter.format(child[i].price);		
-						document.getElementById("productName").innerHTML = child[i].productName;
-						document.getElementById("price").innerHTML = priced;
-						document.getElementById("stock").innerHTML = child[i].stock+" stock available and ready to deliver";
-						document.getElementById("desc").innerHTML = stringParagraf(child[i].desc);
-						document.getElementById("productImage").src = child[i].productImage;
-						document.getElementById("productImage").style.height = "500px";
-						document.getElementById("productImage").style.width = "500px";
-						document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+newProductName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
-						break;
-					}else{
-						if(newProductName != child[i].productName && i == child.length-1){
-							window.location = "<?= base_url();?>BedroomCatalogue/Wardrobe/";
+		firebase.auth().onAuthStateChanged(function(user){
+			if	(user){
+				firebase.database().ref("users").once('value', function(snapshot) {
+					snapshot.forEach(function(childSnapshot) {
+						var childKey = childSnapshot.key;
+						var childData = childSnapshot.val();
+						if(user.uid == childKey){
+							if(childData.type == "user"){
+								const formatter = new Intl.NumberFormat('en-US', {
+								  style: 'currency',
+								  currency: 'IDR',
+								  minimumFractionDigits: 0
+								});
+
+								var sub = stringSplit('<?=$productCategory?>');
+								var productName = stringSplit("<?=$productName?>");
+
+								var newSub = nReplacer(sub);
+
+								document.getElementById("productCategoryLink").innerHTML = newSub;
+								document.getElementById("productNameLink").innerHTML = productName;
+
+
+								var child = [];
+								if (productName != null){
+									firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
+										snapshot.forEach(function(childSnapshot) {
+											var childKey = childSnapshot.key;
+											var childData = childSnapshot.val();
+											child.push(childData);
+										});
+										if(child.length != 0){
+											for(i = 0; i < child.length; i++){
+												if(productName == child[i].productName){
+													var priced = formatter.format(child[i].price);		
+													document.getElementById("productName").innerHTML = child[i].productName;
+													document.getElementById("price").innerHTML = priced;
+													document.getElementById("stock").innerHTML = child[i].stock+" stock available and ready to deliver";
+													document.getElementById("desc").innerHTML = stringParagraf(child[i].desc);
+													document.getElementById("productImage").src = child[i].productImage;
+													document.getElementById("productImage").style.height = "500px";
+													document.getElementById("productImage").style.width = "500px";
+													document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+productName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
+													break;
+												}else{
+													if(productName != child[i].productName && i == child.length-1){
+														window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+													}
+												}
+											}
+										}else{
+											window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+										}
+									});
+								}
+								detailProduct();
+								var btn_add = document.getElementById("btn-add-cart");
+								var cartKey= [];
+								btn_add.onclick = function(){
+									var cartRef = firebase.database().ref("users/"+user.uid+"/Cart/");
+									cartRef.once('value', function(snapshot) {
+										snapshot.forEach(function(childSnapshot) {
+											var childKey = childSnapshot.key;
+											var childData = childSnapshot.val();
+											cartKey.push(childData);
+										});
+									});
+									console.log(cartKey);
+									console.log(newSub);
+									console.log(productName);
+									var productData = [];
+									var productRef = firebase.database().ref("products/Bedroom/"+newSub+"/"+productName);
+									productRef.once('value', function(snapshot) {
+										snapshot.forEach(function(childSnapshot) {
+											var childKey = childSnapshot.key;
+											var childData = childSnapshot.val();
+											productData.push(childData);
+										});
+										console.log(productData);
+										if(productData.length != 0){
+											var amount = document.getElementById("input-stock").value;
+											console.log(amount);
+											console.log(productData[6]);
+											if(amount > productData[6]){
+												alert("Amount exceeded the stock limit!");
+											}else{
+												var priced = amount*productData[1];												cartRef.child(""+cartKey.length).set({
+													id: cartKey.length,
+													productCategory: newSub,
+													productName:productName,
+													price: priced,
+													qty: amount,
+													productImage: productData[3]
+												}, function(error) {
+													if (error) {
+													  // The write failed...
+													} else {
+													  // Data saved successfully!
+														var newStock = productData[6] - amount;
+														productRef.update({
+															stock: newStock
+														});
+														alert('Berhasil Tersimpan Kedalam Cart!');
+														document.location.reload(true);
+													}
+												});
+											}
+										}
+									});
+								}
+							}else{
+								window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+							}
 						}
-					}
+					});
+				});
+			}else{
+				const formatter = new Intl.NumberFormat('en-US', {
+				  style: 'currency',
+				  currency: 'IDR',
+				  minimumFractionDigits: 0
+				});
+
+				var sub = stringSplit('<?=$productCategory?>');
+				var productName = stringSplit("<?=$productName?>");
+
+				var newSub = nReplacer(sub);
+
+				document.getElementById("productCategoryLink").innerHTML = newSub;
+				document.getElementById("productNameLink").innerHTML = productName;
+
+
+				if (productName != null){
+					var child = [];
+					firebase.database().ref("products/Bedroom/"+newSub).once('value', function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+							child.push(childData);
+						});
+						if(child.length != 0){
+							for(i = 0; i < child.length; i++){
+							if(productName == child[i].productName){
+								var priced = formatter.format(child[i].price);		
+								document.getElementById("productName").innerHTML = child[i].productName;
+								document.getElementById("price").innerHTML = priced;
+								document.getElementById("stock").innerHTML = child[i].stock+" stock available and ready to deliver";
+								document.getElementById("desc").innerHTML = stringParagraf(child[i].desc);
+								document.getElementById("productImage").src = child[i].productImage;
+								document.getElementById("productImage").style.height = "500px";
+								document.getElementById("productImage").style.width = "500px";
+								document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+productName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
+								break;
+							}else{
+								if(productName != child[i].productName && i == child.length-1){
+									window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+								}
+							}
+						}
+						}else{
+							window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
+						}
+					});
 				}
-			});
-			firebase.auth().onAuthStateChanged(function(user){
-				if	(user){
-					
-				}else{
-					var btn_add = document.getElementById("btn-add-cart");
-					btn_add.onclick = function(){
-						deleteAlert();
-					}
-				}			
-			});
-		}
-		detailProduct();
+				detailProduct();
+				var btn_add = document.getElementById("btn-add-cart");
+				btn_add.onclick = function(){
+					loginAlert();
+				}
+			}			
+		});
 	}
 	
-	function deleteAlert(){
+	function loginAlert(){
 		const swalWithBootstrapButtons = Swal.mixin({
 		  customClass: {
 			confirmButton: 'btn btn-hijau',
@@ -366,12 +499,9 @@
 		});
 	}
 	
-	function stringSplit(string){
-		return string.replace(/%20/g," ");
-	}
-	
-	function stringParagraf(string){
-		return string.replace(/\n/g,"<br>");
+	function toOtherPageWspace(base_url){
+		var productCategory = stringSplit(base_url);
+		window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/"+productCategory;
 	}
 	
 	function toOtherPage(base_url){
