@@ -320,10 +320,10 @@
 		return string.replace(/ n /g," & ");
 	}
 	
-	window.onload = loadView;
+/*	window.onload = loadView;
 	
 	function loadView(){
-		
+	*/	
 		firebase.auth().onAuthStateChanged(function(user){
 			if	(user){
 				firebase.database().ref("users").once('value', function(snapshot) {
@@ -393,7 +393,7 @@
 			}			
 		});
 		
-	}
+	//}
             
 	
 	function deleteAlert(){

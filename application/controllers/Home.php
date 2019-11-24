@@ -11,13 +11,6 @@ class Home extends CI_Controller {
 		$this->load->view('Footer/footers');
 	}
 	
-	public function Cart(){
-		$data['judul'] = 'Cart';
-		$this->load->view('Header/headers',$data);
-		$this->load->view('Cart');
-		$this->load->view('Footer/footers');
-	}
-	
 	public function User(){
 		$data['judul'] = 'Home';
 		$this->load->view('Header/headers',$data);
@@ -86,6 +79,33 @@ class Home extends CI_Controller {
 		$data['judul'] = 'Outdoor';
 		$this->load->view('Header/headers',$data);
 		$this->load->view('Outdoor/outdoor_home');
+		$this->load->view('Footer/footers');
+	}
+	
+	public function Cart(){
+		$data['judul'] = 'Cart';
+		$this->load->view('Header/headers',$data);
+		$this->load->view('Cart');
+		$this->load->view('Footer/footers');
+	}
+	
+	public function Checkout(){
+		
+		$data['item'] = json_decode(base64_decode($_GET['item']));
+		
+		$data['judul'] = 'Checkout';
+		$this->load->view('Header/headers',$data);
+		$this->load->view('Checkout');
+		$this->load->view('Footer/footers');
+	}
+	
+	public function Payment(){
+		
+		$data['item'] = json_decode(base64_decode($_GET['obj']));
+		
+		$data['judul'] = 'Payment';
+		$this->load->view('Header/headers',$data);
+		$this->load->view('Payment');
 		$this->load->view('Footer/footers');
 	}
 }

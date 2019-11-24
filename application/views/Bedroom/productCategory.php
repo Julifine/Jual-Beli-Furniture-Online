@@ -52,19 +52,9 @@
 </section>
 <script>
 	
-	window.onload = loadView;
+	//window.onload = loadView;
 	
-	function stringSpace(string){
-		return string.replace(/%20/g," ");
-	}
-	
-	function nReplacer(string){
-		return string.replace(/ n /g," & ");
-	}
-	
-	function loadView(){
-		
-		var sub = stringSpace("<?=$judul?>");
+	var sub = stringSpace("<?=$judul?>");
 		var newSub = nReplacer(sub);
 		var subtitle = document.getElementById("subTitle");
 		subtitle.innerHTML = newSub.toUpperCase();
@@ -162,7 +152,19 @@
 				document.getElementById("tes").style.height = window.innerHeight+"px";
 			}
 		});
+	
+	function stringSpace(string){
+		return string.replace(/%20/g," ");
 	}
+	
+	function nReplacer(string){
+		return string.replace(/ n /g," & ");
+	}
+	/*
+	function loadView(){
+		
+		
+	}*/
 	
 	function toOtherPage(base_url){
 		window.location =base_url;

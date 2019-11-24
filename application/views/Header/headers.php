@@ -30,12 +30,12 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 	<script src="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.js"></script>
 	<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.2.0/firebaseui.css" />
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-auth.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-firestore.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-firestore.js"></script>
 	<script src="https://apis.google.com/js/platform.js" async defer></script>
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-database.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/6.6.1/firebase-storage.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-storage.js"></script>
 	<!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>	
@@ -52,6 +52,18 @@
 	<style>
 		.nav-dropdown:hover>.dropdown-menu{
 			display: block
+		}
+		
+		.btn-delete-cart:hover{
+			cursor: pointer
+		}
+		
+		.btn-hijau{
+			background-color: #28A745!important;color: black!important
+		}
+
+		.btn-merah{
+			background-color: #DC3545!important;color: black!important
 		}
 	</style>
 	
@@ -95,13 +107,13 @@
 							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/KidsRoomCatalogue')" style="color: black">Kids Room</a>
 							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/OutdoorCatalogue')" style="color: black">Outdoor</a>
 						</div>
-					</li>
+					</li><!--
 					<li class="nav-item">
 						<a class="nav-link link text-white" href="Home.html#header2-4" style="font-weight: bold;font-size: 16px">INSPIRATIONS</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link link text-white" href="Home.html#header2-4" style="font-weight: bold;font-size: 16px">NEW LOWER PRICE</a>
-					</li>
+					</li>-->
 				</ul>
 				<form class="form-inline ml-auto" style="">
 			  		<input class="form-control-sm mr-sm-2 search-nav" type="search" placeholder="Search" aria-label="Search" style="background-color: transparent;border: 2px white solid;border-radius: 10px;color: white;height: 40px">
@@ -112,7 +124,7 @@
 						<a class="nav-link" href="#" id="navbardrop" data-toggle="dropdown">
 							<span class="mbri-shopping-cart mbr-iconfont mbr-iconfont-btn" style="color: rgb(255, 255, 255);font-size: 30px"></span>
 						</a>
-						<div class="dropdown-menu" style="right: 0%x;left: 70.5%;width: 22%">
+						<div class="dropdown-menu" style="right: 0%x;left: 70.5%;width: 25%">
 							<div class="container">
 								<div class="col-12">
 									<span style="font-size: 18px;font-weight: normal">MY CART</span>
@@ -144,7 +156,7 @@
 							<img id="profilePicture" src="" alt="" style="height: 32px;border-radius: 20px;">
 						</a>
 						<div class="dropdown-menu" style="right: 0%x;left: 80%;">
-							<a class="drop-item" href="javascript:toLogin()" style="color: black;">My Profile</a>
+							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url(); ?>MyAccount')" style="color: black;">My Profile</a>
 							<a class="drop-item" href="javascript:logout()" style="color: black" >Logout</a>
 						</div>
 					</li>
@@ -155,122 +167,238 @@
 	<script>
 		function toAnotherPage(base_url){
 			window.location = base_url;
-		}
+		}		
 		
 		firebase.auth().onAuthStateChanged(function(user){
-			if	(user){
-				var email = user.email;
-				var dn = user.displayName;
-				var UID = user.uid;
-				var pp = user.photoURL;
-				var phoneNumber = user.phoneNumber;
-				firebase.database().ref("users").once('value', function(snapshot) {
-					snapshot.forEach(function(childSnapshot) {
-						var childKey = childSnapshot.key;
-						var childData = childSnapshot.val();
-						if (UID == childKey){
-							if (childData.type == "admin"){
-								document.getElementById("cart").style.display = "none";
-							}else{
-								document.getElementById("cart").style.display = "block";
-								firebase.database().ref("users/"+UID+"/Cart").once('value', function(snapshot) {
-									var child = [];
-									snapshot.forEach(function(childSnapshot) {
-										var childKey = childSnapshot.key;
-										var childData = childSnapshot.val();
-										child.push(childData);
-									});
-									if(child.length != 0){
-										console.log(child);
-										document.getElementById("cart-empty").style.display = "none";
-										document.getElementById("cart-avail").style.display = "block";
-										var totalPrice = 0;
-										const formatter = new Intl.NumberFormat('en-US', {
-										  style: 'currency',
-										  currency: 'IDR',
-										  minimumFractionDigits: 0
+				if	(user){
+					var email = user.email;
+					var dn = user.displayName;
+					var UID = user.uid;
+					var pp = user.photoURL;
+					var phoneNumber = user.phoneNumber;
+					firebase.database().ref("users").once('value', function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+							if (UID == childKey){
+								if (childData.type == "admin"){
+									document.getElementById("cart").style.display = "none";
+								}else{
+									document.getElementById("cart").style.display = "block";
+									firebase.database().ref("users/"+UID+"/Cart").once('value', function(snapshot) {
+										var child = [];
+										var key = [];
+										snapshot.forEach(function(childSnapshot) {
+											var childKey = childSnapshot.key;
+											var childData = childSnapshot.val();
+											child.push(childData);
+											key.push(childKey);
 										});
-										for (var i = 0; i < child.length;i++){
-											console.log(child[i].productName);
-											var divRow = document.createElement("div");
-											document.getElementById("cart-avail").appendChild(divRow);
-											divRow.className = "row";
-											divRow.style.marginBottom = "20px";
+										if(child.length != 0){
+											document.getElementById("cart-empty").style.display = "none";
+											document.getElementById("cart-avail").style.display = "block";
+											var totalPrice = 0;
+											const formatter = new Intl.NumberFormat('en-US', {
+											  style: 'currency',
+											  currency: 'IDR',
+											  minimumFractionDigits: 0
+											});
+											for (var i = 0; i < child.length;i++){
+												var divRow = document.createElement("div");
+												document.getElementById("cart-avail").appendChild(divRow);
+												divRow.className = "row";
+												divRow.style.marginTop = "10px";
 
-											var divColImage = document.createElement("div");
-											divRow.appendChild(divColImage);
-											divColImage.className = "col-2";
+												var divColImage = document.createElement("div");
+												divRow.appendChild(divColImage);
+												divColImage.className = "col-1";
 
-											var prodImage = document.createElement("img");
-											divColImage.appendChild(prodImage);
-											prodImage.src = child[i].productImage;
-											prodImage.style.borderRadius = "50px";
-											prodImage.setAttribute('width', "50");
-											prodImage.setAttribute('height', "50");
+												var prodImage = document.createElement("img");
+												divColImage.appendChild(prodImage);
+												prodImage.src = child[i].productImage;
+												prodImage.style.borderRadius = "50px";
+												prodImage.setAttribute('width', "50");
+												prodImage.setAttribute('height', "50");
 
-											var divColName = document.createElement("div");
-											divRow.appendChild(divColName);
-											divColName.className = "col-5";
+												var divColName = document.createElement("div");
+												divRow.appendChild(divColName);
+												divColName.className = "col-5 ml-5";
 
-											var prodName = document.createElement("span");
-											divColName.appendChild(prodName);
-											prodName.innerHTML = child[i].productName+"<br>";
+												var prodName = document.createElement("span");
+												divColName.appendChild(prodName);
+												prodName.innerHTML = child[i].productName+"<br>";
 
-											var prodQTY = document.createElement("span");
-											divColName.appendChild(prodQTY);
-											prodQTY.innerHTML = "QTY: " + child[i].qty;
+												var prodQTY = document.createElement("span");
+												divColName.appendChild(prodQTY);
+												prodQTY.innerHTML = "QTY: " + child[i].qty;
 
-											var divColPrice = document.createElement("div");
-											divRow.appendChild(divColPrice);
-											divColPrice.className = "col-5";
-											var priced = formatter.format(child[i].price);
+												var divColPrice = document.createElement("div");
+												divRow.appendChild(divColPrice);
+												divColPrice.className = "col-5";
+												divColPrice.style.marginLeft = "-50px";
+												var priced = formatter.format(child[i].totalPrice);
 
-											var prodPrice = document.createElement("span");
-											divColPrice.appendChild(prodPrice);
-											prodPrice.innerHTML = priced;
-											totalPrice = totalPrice + child[i].price;
+												var prodPrice = document.createElement("span");
+												divColPrice.appendChild(prodPrice);
+												prodPrice.innerHTML = priced;
+												totalPrice = totalPrice + child[i].totalPrice;
+
+												var divColDelete = document.createElement("div");
+												divRow.appendChild(divColDelete);
+												divColDelete.className = "col-1";
+												divColDelete.style.marginLeft = "-20px";
+
+												var prodDelete = document.createElement("button");
+												divColDelete.appendChild(prodDelete);
+												prodDelete.style.backgroundColor = "transparent";
+												prodDelete.style.border = "none";
+												prodDelete.className = "fas fa-trash-alt btn-delete-cart";
+												prodDelete.id = "btn_delete_cart_"+i;
+												prodDelete.style.width = "20px";
+												prodDelete.style.height = "20px";
+												prodDelete.style.marginTop = "20px";
+												prodDelete.onclick = "deleteItem()";
+												prodDelete.dataset.tags = child[i].productName;
+												
+												var btn_delete_item = document.getElementById("btn_delete_cart_"+i);
+												btn_delete_item.onclick = function(){
+													
+													const swalWithBootstrapButtons = Swal.mixin({
+													  customClass: {
+														confirmButton: 'btn btn-hijau',
+														cancelButton: 'btn btn-merah'
+													  },
+													  buttonsStyling: false
+													})
+
+													swalWithBootstrapButtons.fire({
+													  title: 'Warning!',
+													  text: "Are you sure want to remove this item?",
+													  type: 'warning',
+													  showCancelButton: true,
+													  confirmButtonText: 'Yes, delete it',
+													  cancelButtonText: 'No, cancel',
+													  reverseButtons: true
+													}).then((result) => {
+													  if (result.dismiss === Swal.DismissReason.cancel) {
+														swalWithBootstrapButtons.fire(
+														  'Cancelled',
+														  'The item successfully added back to your cart!',
+														  'error'
+														)
+													  }else if (result.dismiss){
+														  swalWithBootstrapButtons.fire(
+															  'Cancelled',
+															  'The item successfully added back to your cart!',
+															  'error'
+														  );
+													  }else{
+														  swalWithBootstrapButtons.fire(
+															  'Success',
+															  'The item successfully removed from your cart!',
+															  'success'
+														  ).then((result) =>{
+															  if (result.dismiss){
+																  deleteItem(UID,this.dataset.tags);
+															  }else{
+																  deleteItem(UID,this.dataset.tags);
+															  }
+														  });
+													  }
+													});													
+												}
+											}
+											
+											var divContainer = document.createElement("div");
+											divRow.appendChild(divContainer);
+											divContainer.className = "container";
+											
+											var divRowTotalPrice = document.createElement("div");
+											divContainer.appendChild(divRowTotalPrice);
+											divRowTotalPrice.className = "row";
+											divRowTotalPrice.style.backgroundColor = "rgba(0,0,0,0.3)";
+											divRowTotalPrice.style.marginTop = "20px";
+
+											var divTotalName = document.createElement("div");
+											divRowTotalPrice.appendChild(divTotalName);
+											divTotalName.className = "col-4";
+
+											var totalCartName = document.createElement("a");
+											divTotalName.appendChild(totalCartName);
+											totalCartName.innerHTML = "View Detail";
+											totalCartName.style.color = "black"
+											totalCartName.href = "<?= base_url();?>Home/Cart"
+
+											var divTotalPrice = document.createElement("div");
+											divRowTotalPrice.appendChild(divTotalPrice);
+											divTotalPrice.className = "col-8";
+											divTotalPrice.style.textAlign = "right";
+
+											var totalCartPrice = document.createElement("span");
+											divTotalPrice.appendChild(totalCartPrice);
+											totalCartPrice.innerHTML = "Total Price: <b>"+formatter.format(totalPrice)+"</b>";
+										}else{
+											console.log("Gaa Ada!");
+											document.getElementById("cart-empty").style.display = "flex";
+											document.getElementById("cart-avail").style.display = "none";
 										}
-										
-										var divSpace = document.createElement("div");
-										divRow.appendChild(divSpace);
-										divSpace.className = "col-2";
-										divSpace.style.marginTop = "20px";
-										
-										var divTotalName = document.createElement("div");
-										divRow.appendChild(divTotalName);
-										divTotalName.className = "col-5";
-										divTotalName.style.textAlign = "right";
-										divTotalName.style.marginTop = "20px";
-										
-										var totalCartName = document.createElement("span");
-										divTotalName.appendChild(totalCartName);
-										totalCartName.innerHTML = "Total Price:";
-										
-										var divTotalPrice = document.createElement("div");
-										divRow.appendChild(divTotalPrice);
-										divTotalPrice.className = "col-5";
-										divTotalPrice.style.marginTop = "20px";
-										
-										var totalCartPrice = document.createElement("span");
-										divTotalPrice.appendChild(totalCartPrice);
-										totalCartPrice.innerHTML = formatter.format(totalPrice);
-									}else{
-										console.log("Gaa Ada!");
-										document.getElementById("cart-empty").style.display = "flex";
-										document.getElementById("cart-avail").style.display = "none";
-									}
-								});
-							}
-							document.getElementById('profilePicture').src = childData.imageUrl;
-						} 
+									});
+								}
+								document.getElementById('profilePicture').src = childData.imageUrl;
+							} 
+						});
 					});
+					document.getElementById("user-none").style.display = "none";
+					document.getElementById("user-avail").style.display = "block";
+				}else{
+					document.getElementById("user-none").style.display = "block";
+					document.getElementById("user-avail").style.display = "none";
+				}
+			});
+		
+		function deleteItem(UID,datasetTags){
+			var cartItem = firebase.database().ref("users/"+UID+"/Cart");
+			var prodctName = datasetTags;
+			cartItem.once('value',function(snapshot) {
+				var chldData = [];
+				var chldKey = [];
+				snapshot.forEach(function(childSnapshot) {
+					var childKey = childSnapshot.key;
+					var childData = childSnapshot.val();
+					chldData.push(childData);
+					chldKey.push(childKey);
 				});
-				document.getElementById("user-none").style.display = "none";
-				document.getElementById("user-avail").style.display = "block";
-			}else{
-				document.getElementById("user-none").style.display = "block";
-				document.getElementById("user-avail").style.display = "none";
-			}
-		});
+				console.log(chldData);
+				for(var i = 0; i < chldKey.length;i++){
+					if(chldKey[i] == prodctName){
+						cartItem.child(prodctName).remove();
+						var qtyInCart = chldData[i].qty;
+						var prodctRef = firebase.database().ref("products/"+chldData[i].roomCategory+"/"+chldData[i].productCategory+"/"+chldData[i].productName);
+						prodctRef.once('value',function(snapshot){
+							var productDetail = [];
+							snapshot.forEach(function(childSnapshot){
+								var childKey = childSnapshot.key;
+								var childData = childSnapshot.val();
+								productDetail.push(childData);
+							});
+							console.log(productDetail);
+							var newStock = parseInt(productDetail[6])+parseInt(qtyInCart);
+							prodctRef.update({
+								stock:newStock
+							}, function(error) {
+								if (error) {
+								  // The write failed...
+								} else {
+								  // Data saved successfully!
+									//alert('Success Delete an Item in Cart6!');
+
+									document.location.reload(true);
+								}
+							});
+						});
+					}
+				}
+			});
+		}
 		
 	</script>

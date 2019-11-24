@@ -199,6 +199,8 @@
 								uid:cred.user.uid,
 								imageUrl: pp,
 								phoneNumber: pn,
+								firstName: '-',
+								lastName: '-',
 								type: 'admin'
 							});
 						}).catch(function(error) {

@@ -114,7 +114,7 @@
 						</div>
 					</div>
 					<div class="row" style="margin-top: 40px;padding-left: 18%;padding-right: 18%">
-						<div class="col-4" style="text-align: center;padding: 0px">
+						<div class="col-4" style="text-align: center;padding:0px">
 							<a href="javascript:signInWithGoogle('<?= base_url(); ?>')" id="btn-google">
 								<img src="<?= base_url();?>/Assets/google.svg" alt="">
 							</a>
@@ -162,7 +162,20 @@
 			
 			firebase.auth().onAuthStateChanged(function(user){
 				if	(user){
-					window.location.href = "<?= base_url(); ?>Home";
+					var email = user.email;
+					var dn = user.displayName;
+					var UID = user.uid;
+					var pp = user.photoURL;
+					var phoneNumber = user.phoneNumber;
+					firebase.database().ref("users").once('value', function(snapshot) {
+						snapshot.forEach(function(childSnapshot) {
+							var childKey = childSnapshot.key;
+							var childData = childSnapshot.val();
+							if (UID == childKey){
+								window.location.href = "<?= base_url(); ?>Home";
+							}
+						});
+					});
 				}
 			});
 		</script>

@@ -1,10 +1,10 @@
 <section once="footers" class="cid-rFdMoEkndg" id="footer7-9" >
     <div class="container">
         <div class="media-container-row align-center mbr-white">
-            <div class="row row-links">
+            <!--<div class="row row-links">
                 <ul class="foot-menu">
                 <li class="foot-menu-item mbr-fonts-style display-7"><p><a href="Home.html#gallery1-6">Catalogue</a></p></li><li class="foot-menu-item mbr-fonts-style display-7">Planning Tools</li><li class="foot-menu-item mbr-fonts-style display-7">Customer Service</li><li class="foot-menu-item mbr-fonts-style display-7">Contact Us&nbsp;</li><li class="foot-menu-item mbr-fonts-style display-7">Store Information</li><li class="foot-menu-item mbr-fonts-style display-7">FAQ</li><li class="foot-menu-item mbr-fonts-style display-7">News Room</li></ul>
-            </div>
+            </div>-->
             <div class="row social-row">
                 <div class="social-list align-right pb-2">
                 	<div class="soc-item">

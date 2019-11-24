@@ -30,7 +30,35 @@ function signInWithFacebook(base_url){
 		var uid = user.uid;
 		var imageUrl = user.photoURL;
 		var phoneNumber = user.phoneNumber;
-		window.location = base_url;
+		
+		if (phoneNumber == null){
+			phoneNumber = "-";
+		}
+		
+		firebase.database().ref("users").once('value', function(snapshot) {
+			snapshot.forEach(function(childSnapshot) {
+				var childKey = childSnapshot.key;
+				var childData = childSnapshot.val();
+				if (uid == childKey){
+					if	(childData.type == "user"){
+						window.location.href = base_url;
+					}
+				}else{
+					var firebaseRef = firebase.database().ref("users/" + uid);
+					firebaseRef.set({
+						email: email,
+						displayName: displayName,
+						uid:uid,
+						imageUrl: imageUrl,
+						phoneNumber: phoneNumber,
+						firstName: '-',
+						lastName: '-',
+						type: 'user'
+					});
+					window.location.href = base_url;
+				}
+			});
+		});
 		
 	}).catch(function(error) {
 	  // Handle Errors here.
@@ -96,6 +124,8 @@ function signInWithGoogle(base_url){
 						uid:UID,
 						imageUrl: pp,
 						phoneNumber: phoneNumber,
+						firstName: '-',
+						lastName: '-',
 						type: 'user'
 					});
 					window.location.href = base_url;
@@ -153,6 +183,8 @@ var uiConfig = {
 				uid:user.uid,
 				imageUrl: pp,
 				phoneNumber: user.phoneNumber,
+				firstName: '-',
+				lastName: '-',
 				type: 'user'
 			});
 			return true;
@@ -225,6 +257,8 @@ signUpForm.addEventListener('submit',(e) => {
 						uid:cred.user.uid,
 						imageUrl: pp,
 						phoneNumber: pn,
+						firstName: '-',
+						lastName: '-',
 						type: 'user'
 					});
 				}).catch(function(error) {

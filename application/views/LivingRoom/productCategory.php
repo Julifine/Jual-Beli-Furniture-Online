@@ -48,7 +48,6 @@
 </section>
 <script>
 	
-	window.onload = loadView;
 	
 	function stringSpace(string){
 		return string.replace(/%20/g," ");
@@ -57,8 +56,6 @@
 	function nReplacer(string){
 		return string.replace(/ n /g," & ");
 	}
-	
-	function loadView(){
 		
 		var sub = stringSpace("<?=$judul?>");
 		var newSub = nReplacer(sub);
@@ -158,7 +155,6 @@
 				document.getElementById("tes").style.height = window.innerHeight+"px";
 			}
 		});
-	}
 	
 	function toOtherPage(base_url){
 		window.location =base_url;

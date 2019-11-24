@@ -287,10 +287,7 @@
 	  });
 	} 
 	
-	window.onload = loadView;
-	
-	function loadView(){
-		firebase.auth().onAuthStateChanged(function(user){
+	firebase.auth().onAuthStateChanged(function(user){
 			if	(user){
 				firebase.database().ref("users").once('value', function(snapshot) {
 					snapshot.forEach(function(childSnapshot) {
@@ -348,6 +345,7 @@
 								detailProduct();
 								var btn_add = document.getElementById("btn-add-cart");
 								var cartKey= [];
+								var productKey = [];
 								btn_add.onclick = function(){
 									var cartRef = firebase.database().ref("users/"+user.uid+"/Cart/");
 									cartRef.once('value', function(snapshot) {
@@ -355,11 +353,9 @@
 											var childKey = childSnapshot.key;
 											var childData = childSnapshot.val();
 											cartKey.push(childData);
+											productKey.push(childKey);
 										});
 									});
-									console.log(cartKey);
-									console.log(newSub);
-									console.log(productName);
 									var productData = [];
 									var productRef = firebase.database().ref("products/Bedroom/"+newSub+"/"+productName);
 									productRef.once('value', function(snapshot) {
@@ -371,31 +367,61 @@
 										console.log(productData);
 										if(productData.length != 0){
 											var amount = document.getElementById("input-stock").value;
-											console.log(amount);
-											console.log(productData[6]);
 											if(amount > productData[6]){
 												alert("Amount exceeded the stock limit!");
 											}else{
-												var priced = amount*productData[1];												cartRef.child(""+cartKey.length).set({
-													id: cartKey.length,
-													productCategory: newSub,
-													productName:productName,
-													price: priced,
-													qty: amount,
-													productImage: productData[3]
-												}, function(error) {
-													if (error) {
-													  // The write failed...
-													} else {
-													  // Data saved successfully!
-														var newStock = productData[6] - amount;
-														productRef.update({
-															stock: newStock
-														});
-														alert('Berhasil Tersimpan Kedalam Cart!');
-														document.location.reload(true);
+												var already;
+												for( var i = 0; i < productKey.length;i++){
+													if(productKey[i] == productName){
+														already = true;
+														break;
+													}else{
+														already = false;
 													}
-												});
+												}
+												
+												var cartItem = [];
+												if(already){
+													cartRef.child(productName).once('value', function(snapshot) {
+														snapshot.forEach(function(childSnapshot) {
+															var childKey = childSnapshot.key;
+															var childData = childSnapshot.val();
+															cartItem.push(childData);
+														});
+														var newQty = parseInt(cartItem[5]) + parseInt(amount);
+														var newPrice = newQty * productData[1];
+														cartRef.child(productName).update({
+															qty: newQty,
+															totalPrice: newPrice
+														}, function(error) {
+															if (error) {
+															  // The write failed...
+															} else {
+															  // Data saved successfully!
+																sweetAlertSuccess();
+															}
+														});
+													});		
+												}else{
+													var priced = amount*productData[1];											
+													cartRef.child(productName).set({
+														id: cartKey.length,
+														productCategory: newSub,
+														roomCategory: productData[5],
+														productName:productName,
+														price:productData[1],
+														totalPrice: priced,
+														qty: amount,
+														productImage: productData[3]
+													}, function(error) {
+														if (error) {
+														  // The write failed...
+														} else {
+														  // Data saved successfully!
+															sweetAlertSuccess();
+														}
+													});
+												}
 											}
 										}
 									});
@@ -460,6 +486,29 @@
 					loginAlert();
 				}
 			}			
+		});
+	
+	function sweetAlertSuccess(){
+		const swalWithBootstrapButtons = Swal.mixin({
+		  customClass: {
+			confirmButton: 'btn btn-hijau'
+		  },
+		  buttonsStyling: false
+		})
+
+		swalWithBootstrapButtons.fire({
+		  title: 'Good Job!',
+		  text: "The items successfully added to your cart",
+		  type: 'success',
+		  confirmButtonText: 'OK',
+		  cancelButtonText: 'No, cancel',
+		  reverseButtons: true
+		}).then((result) => {
+		  if (result.dismiss){
+			  document.location.reload(true);
+		  }else{
+			  document.location.reload(true);
+		  }
 		});
 	}
 	
