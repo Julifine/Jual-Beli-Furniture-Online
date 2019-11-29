@@ -32,8 +32,9 @@
 <input type="text" value="<?= $item->productCategory;?>" style="display: none" id="productCategory-<?= $i; ?>">
 <input type="text" value="<?= $item->roomCategory;?>" style="display: none" id="roomCategory-<?= $i; ?>">
 <input type="text" value="<?= $item->amount;?>" style="display: none" id="amount-<?= $i; ?>">
+<input type="text" value="<?= $item->price; ?>" style="display: none" id="price-<?= $i; ?>">
 <?php $i = $i + 1; endforeach; ?>
-<input type="text" value="<?= $item->price; ?>" style="display: none" id="totalprice">
+<input type="text" value="<?= $item->totalprice; ?>" style="display: none" id="totalprice">
 <section style="background-color: #808080;min-height: 86.3%" class="features19 cid-rFh1Nopgcw">    
 <div>
 <div class="container">
@@ -42,7 +43,7 @@
 			<span style="font-size: 20px;color: white;font-weight: 600">TOTAL INVOICE</span>
 		</div>
 		<div class="col-6" style="text-align: right">
-			<span style="font-size: 20px;color: white;font-weight: 600">Rp <?= number_format($item->price,0,'.','.') ?><i class="fas fa-info-circle fa-xs" style="color: rgb(240, 144, 8)"></i></span>
+			<span style="font-size: 20px;color: white;font-weight: 600">Rp <?= number_format($item->totalprice,0,'.','.') ?> <i class="fas fa-info-circle fa-xs" style="color: rgb(240, 144, 8)"></i></span>
 		</div>
 	</div>
 	<div class="row" style="margin-top: 20px;background-color: rgba(51,51,51,0.2);padding: 10px" id="paymentMethod" onClick="paymentMethod()">
@@ -81,10 +82,10 @@
 			<div class="row" style="padding: 10px;padding-left: 0px;color: white;margin-top: 20px">
 				<div class="col-6">
 					<div style="font-size: 20px">Total Payment</div>
-					<div style="color: rgb(240, 144, 8);font-size: 20px">Rp <?= number_format($item->price,0,'.','.') ?> <i class="fas fa-chevron-circle-down fa-xs"></i></div>
+					<div style="color: rgb(240, 144, 8);font-size: 20px">Rp <?= number_format($item->totalprice,0,'.','.') ?> <i class="fas fa-chevron-circle-down fa-xs"></i></div>
 				</div>
 				<div class="col-6" style="padding: 0px">
-					<button class="btn-putih" style="width: 100%;background-color: white" onClick="payNow('Mandiri Virtual Account')"><b>PAY NOW</b></button>
+					<button class="btn-putih" style="width: 100%;background-color: white" onClick="payNow('Mandiri Virtual Account')" id="processNow"><b>PAY NOW</b></button>
 				</div>
 			</div>
 			<div class="row">
@@ -109,10 +110,10 @@
 			<div class="row" style="padding: 10px;padding-left: 0px;color: white;margin-top: 20px">
 				<div class="col-6">
 					<div style="font-size: 20px">Total Payment</div>
-					<div style="color: rgb(240, 144, 8);font-size: 20px">Rp <?= number_format($item->price,0,'.','.') ?> <i class="fas fa-chevron-circle-down fa-xs"></i></div>
+					<div style="color: rgb(240, 144, 8);font-size: 20px">Rp <?= number_format($item->totalprice,0,'.','.') ?> <i class="fas fa-chevron-circle-down fa-xs"></i></div>
 				</div>
 				<div class="col-6" style="padding: 0px">
-					<button class="btn-putih" style="width: 100%;background-color: white" onClick="payNow('Cash on Delivery')"><b>PROCESS NOW</b></button>
+					<button class="btn-putih" style="width: 100%;background-color: white" onClick="payNow('Cash on Delivery')" id="processNow"><b>PROCESS NOW</b></button>
 				</div>
 			</div>
 			<div class="row" style="margin-top: 10px;margin-bottom: 10px">
@@ -171,7 +172,7 @@
 			  'Thanks for purchasing our product!',
 			  'success'
 			).then((result) => {
-				alert("coi")
+				window.location = "<?= base_url(); ?>"
 			})
 		}
 	
@@ -179,42 +180,42 @@
 	function payNow(method){
 		var i = <?= $i ?>;
 		console.log(i);
-		for( var y = 0; y < i; y++){
-			var productName = document.getElementById("productName-"+y).value;
-			var productCategory = document.getElementById("productCategory-"+y).value;
-			var roomCategory = document.getElementById("roomCategory-"+y).value;
-			var amount = document.getElementById("amount-"+y).value;
-			var price = document.getElementById("totalprice").value;
-			var trans_method = method;
+		var objList = [];
+		var childD = [];
+		for( var y = 0;y < i; y++){	
+			var obj = {};
+			obj['productName'] = document.getElementById("productName-"+y).value;
+			obj['productCategory'] = document.getElementById("productCategory-"+y).value;
+			obj['roomCategory'] = document.getElementById("roomCategory-"+y).value;
+			obj['amount'] = document.getElementById("amount-"+y).value;
+			obj['price'] = document.getElementById("price-"+y).value;
+			obj['totalprice'] = document.getElementById("totalprice").value;
+			obj['trans_method'] = method;
+			objList.push(obj)
 			
-			var newAmount;
-			
-			firebase.database().ref("products/"+roomCategory+"/"+productCategory+"/").on('value', function(snapshot){
-				var child = [];
-				var key = [];
-				snapshot.forEach(function(childSnapshot) {
-					var childKey = childSnapshot.key;
-					var childData = childSnapshot.val();
-					child.push(childData);
-					key.push(childKey);
-				});
-				for( var x = 0; x < child.length; x++){
-						console.log(productName)
-					if(productName == key[x]){
-						newAmount = parseInt(child[x].stock) - parseInt(amount);
-						console.log("child: "+child[x].stock)
-						console.log("amount: "+amount)
-						console.log(newAmount)
-					}
-				}
-				
-			})
-			/*firebase.database().ref("products/"+roomCategory+"/"+productCategory+"/"+productName).update({
-					stock:1
-			})*/
-		}
+			var stock;
+			firebase.database().ref("products/"+document.getElementById("roomCategory-"+y).value+"/"+document.getElementById("productCategory-"+y).value+"/"+document.getElementById("productName-"+y).value).on("value", function (snapshot){
 	
-			/*
+				stock = snapshot.val().stock
+				//childD.push(snapshot.val().stock)
+			}, function (error){
+				console.log(error)
+			})
+			childD.push(stock)
+		}
+		if(childD[0] == null){
+			setTimeout( function(){
+				document.getElementById("processNow").click()
+			},500)
+		}
+		for( var y = 0;y < objList.length; y++){
+			
+			var newStock = childD[y] - objList[y].amount
+			console.log(newStock)
+			firebase.database().ref("products/"+objList[y].roomCategory+"/"+objList[y].productCategory+"/"+objList[y].productName).update({
+				stock: newStock
+			})
+		}
 			
 			firebase.auth().onAuthStateChanged(function(user){
 				if	(user){
@@ -239,7 +240,7 @@
 										cartKey.push(childKey)
 									})
 									for(var i = 0; i < childCart.length; i++){
-										if(childCart[i].productCategory == objCart['productCategory'] && objCart['productName'] == cartKey[i]){
+										if(childCart[i].productCategory == objList[i].productCategory && objList[i].productName == cartKey[i]){
 											userRefs.child(UID+"/Cart/"+cartKey[i]).remove()
 										}
 									}
@@ -254,6 +255,7 @@
 										childD.push(childData)
 									})
 									length = childD.length;
+									console.log(length)
 									userRefs.child(UID+"/address").once('value', function(snapshot){
 										snapshot.forEach(function(childSnapshot) {
 											var childKey = childSnapshot.key;
@@ -267,25 +269,30 @@
 										var yyyy = today.getFullYear();
 
 										today = dd + '/' + mm + '/' + yyyy;
-										firebase.database().ref("transaction/"+length).set({
-											uid: UID,
-											displayName: dn,
-											phoneNumber: childData.phoneNumber,
-											address: address,
-											productName:objCart['productName'],
-											amount:objCart['amount'],
-											totalprice: objCart['price'],
-											trans_method: objCart['trans_method'],
-											date:today
-										})
+										for(var x = 0; x < objList.length;x++){
+											firebase.database().ref("transactions/"+length).set({
+												uid: UID,
+												displayName: dn,
+												phoneNumber: childData.phoneNumber,
+												address: address,
+												productName:objList[x].productName,
+												amount:objList[x].amount,
+												price:objList[x].price,
+												totalprice: objList[x].totalprice,
+												trans_method: objList[x].trans_method,
+												date:today
+											})
+											length++;
+										}
+										payAlert();
 									})
 								})
+							
 							}
 						})
 					})
 				}
-			})*/
-		payAlert();
+			})
 	}
 	function showMethod(){
 		document.getElementById("paymentMethodMenu").style.display = "block";

@@ -346,58 +346,88 @@
 									});
 								}
 								detailProduct();
-							}else{
-								const formatter = new Intl.NumberFormat('en-US', {
-								  style: 'currency',
-								  currency: 'IDR',
-								  minimumFractionDigits: 0
-								});
-
-								var sub = stringSplit('<?=$productCategory?>');
-								var productName = stringSplit("<?=$productName?>");
-
-								var newSub = nReplacer(sub);
-
-								document.getElementById("productCategoryLink").innerHTML = newSub;
-								document.getElementById("productNameLink").innerHTML = productName;
-
-
-								if (productName != null){
-									var child = [];
-									firebase.database().ref("products/Livingroom/"+newSub).once('value', function(snapshot) {
+								var btn_add = document.getElementById("btn-add-cart");
+								var cartKey= [];
+								var productKey = [];
+								btn_add.onclick = function(){
+									var cartRef = firebase.database().ref("users/"+user.uid+"/Cart/");
+									cartRef.once('value', function(snapshot) {
 										snapshot.forEach(function(childSnapshot) {
 											var childKey = childSnapshot.key;
 											var childData = childSnapshot.val();
-											child.push(childData);
+											cartKey.push(childData);
+											productKey.push(childKey);
 										});
-										if(child.length != 0){
-											for(i = 0; i < child.length; i++){
-											if(productName == child[i].productName){
-												var priced = formatter.format(child[i].price);		
-												document.getElementById("productName").innerHTML = child[i].productName;
-												document.getElementById("price").innerHTML = priced;
-												document.getElementById("stock").innerHTML = child[i].stock+" stock available and ready to deliver";
-												document.getElementById("desc").innerHTML = stringParagraf(child[i].desc);
-												document.getElementById("productImage").src = child[i].productImage;
-												document.getElementById("productImage").style.height = "500px";
-												document.getElementById("productImage").style.width = "500px";
-												document.getElementById("mf_detail").innerHTML = "A showcase for your finest things, keeping them safe and dust-free – and the sliding doors don’t take up any space when open. "+productName+" cabinet with glass doors is a perfect companion for MALM chest of 6 drawers.";
-												break;
+									});
+									var productData = [];
+									var productRef = firebase.database().ref("products/Outdoor/"+newSub+"/"+productName);
+									productRef.once('value', function(snapshot) {
+										snapshot.forEach(function(childSnapshot) {
+											var childKey = childSnapshot.key;
+											var childData = childSnapshot.val();
+											productData.push(childData);
+										});
+										console.log(productData);
+										if(productData.length != 0){
+											var amount = document.getElementById("input-stock").value;
+											if(parseInt(amount) > parseInt(productData[6])){
+												alert("Amount exceeded the stock limit!");
 											}else{
-												if(productName != child[i].productName && i == child.length-1){
-													window.location = "<?= base_url();?>LivingroomCatalogue/roomProduct/<?=$productCategory;?>";
+												var already;
+												for( var i = 0; i < productKey.length;i++){
+													if(productKey[i] == productName){
+														already = true;
+														break;
+													}else{
+														already = false;
+													}
+												}
+												
+												var cartItem = [];
+												if(already){
+													cartRef.child(productName).once('value', function(snapshot) {
+														snapshot.forEach(function(childSnapshot) {
+															var childKey = childSnapshot.key;
+															var childData = childSnapshot.val();
+															cartItem.push(childData);
+														});
+														var newQty = parseInt(cartItem[5]) + parseInt(amount);
+														var newPrice = newQty * productData[1];
+														cartRef.child(productName).update({
+															qty: newQty,
+															totalPrice: newPrice
+														}, function(error) {
+															if (error) {
+															  // The write failed...
+															} else {
+															  // Data saved successfully!
+																sweetAlertSuccess();
+															}
+														});
+													});		
+												}else{
+													var priced = amount*productData[1];											
+													cartRef.child(productName).set({
+														id: cartKey.length,
+														productCategory: newSub,
+														roomCategory: productData[5],
+														productName:productName,
+														price:productData[1],
+														totalPrice: priced,
+														qty: amount,
+														productImage: productData[3]
+													}, function(error) {
+														if (error) {
+														  // The write failed...
+														} else {
+														  // Data saved successfully!
+															sweetAlertSuccess();
+														}
+													});
 												}
 											}
 										}
-										}else{
-											window.location = "<?= base_url();?>LivingroomCatalogue/roomProduct/<?=$productCategory;?>";
-										}
 									});
-								}
-								detailProduct();
-								var btn_add = document.getElementById("btn-add-cart");
-								btn_add.onclick = function(){
-									deleteAlert();
 								}
 							}
 						}
@@ -454,13 +484,37 @@
 				detailProduct();
 				var btn_add = document.getElementById("btn-add-cart");
 				btn_add.onclick = function(){
-					deleteAlert();
+					loginAlert();
 				}
 			}			
 		});
 	}
 	
-	function deleteAlert(){
+	function sweetAlertSuccess(){
+		const swalWithBootstrapButtons = Swal.mixin({
+		  customClass: {
+			confirmButton: 'btn btn-hijau'
+		  },
+		  buttonsStyling: false
+		})
+
+		swalWithBootstrapButtons.fire({
+		  title: 'Good Job!',
+		  text: "The items successfully added to your cart",
+		  type: 'success',
+		  confirmButtonText: 'OK',
+		  cancelButtonText: 'No, cancel',
+		  reverseButtons: true
+		}).then((result) => {
+		  if (result.dismiss){
+			  document.location.reload(true);
+		  }else{
+			  document.location.reload(true);
+		  }
+		});
+	}
+	
+	function loginAlert(){
 		const swalWithBootstrapButtons = Swal.mixin({
 		  customClass: {
 			confirmButton: 'btn btn-hijau',

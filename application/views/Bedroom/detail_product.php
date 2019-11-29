@@ -367,7 +367,7 @@
 										console.log(productData);
 										if(productData.length != 0){
 											var amount = document.getElementById("input-stock").value;
-											if(amount > productData[6]){
+											if(parseInt(amount) > parseInt(productData[6])){
 												alert("Amount exceeded the stock limit!");
 											}else{
 												var already;
@@ -426,8 +426,6 @@
 										}
 									});
 								}
-							}else{
-								window.location = "<?= base_url();?>BedroomCatalogue/roomProduct/<?=$productCategory;?>";
 							}
 						}
 					});

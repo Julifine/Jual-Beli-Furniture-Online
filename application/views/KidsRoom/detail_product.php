@@ -370,7 +370,7 @@
 										console.log(productData);
 										if(productData.length != 0){
 											var amount = document.getElementById("input-stock").value;
-											if(amount > productData[6]){
+											if(parseInt(amount) > parseInt(productData[6])){
 												alert("Amount exceeded the stock limit!");
 											}else{
 												var already;
@@ -395,17 +395,12 @@
 														var newPrice = newQty * productData[1];
 														cartRef.child(productName).update({
 															qty: newQty,
-															price: newPrice
+															totalPrice: newPrice
 														}, function(error) {
 															if (error) {
 															  // The write failed...
 															} else {
 															  // Data saved successfully!
-																var newStock = productData[6] - amount;
-																productRef.update({
-																	stock: newStock
-																});
-																//alert('Berhasil Tersimpan Kedalam Cart!');
 																sweetAlertSuccess();
 															}
 														});
@@ -417,7 +412,8 @@
 														productCategory: newSub,
 														roomCategory: productData[5],
 														productName:productName,
-														price: priced,
+														price:productData[1],
+														totalPrice: priced,
 														qty: amount,
 														productImage: productData[3]
 													}, function(error) {
@@ -425,11 +421,6 @@
 														  // The write failed...
 														} else {
 														  // Data saved successfully!
-															var newStock = productData[6] - amount;
-															productRef.update({
-																stock: newStock
-															});
-															//alert('Berhasil Tersimpan Kedalam Cart!');
 															sweetAlertSuccess();
 														}
 													});
@@ -438,8 +429,6 @@
 										}
 									});
 								}
-							}else{
-								window.location = "<?= base_url();?>KidsroomCatalogue/roomProduct/<?=$productCategory;?>";
 							}
 						}
 					});

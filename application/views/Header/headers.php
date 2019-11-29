@@ -70,7 +70,7 @@
 </head>
 <body>
 	<section class="menu cid-qTkzRZLJNu" once="menu" id="menu1-3">
-    	<nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm" style="padding-left: 200px;padding-right: 200px">
+    	<nav class="navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm" style="padding-left: 100px;padding-right: 100px">
         	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             	<div class="hamburger">
                 	<span></span>
@@ -91,29 +91,29 @@
         	<div class="collapse navbar-collapse" id="navbarSupportedContent">
             	<ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
 					<li class="nav-item">
-						<a class="nav-link link text-white" href="Home.html#header2-4" style="font-weight: bold;font-size: 16px">PRODUCTS&nbsp;</a>
-					</li>
-					<li class="nav-item nav-dropdown">
-						<a class="nav-link link text-white" href="#" id="navbardrop" data-toggle="dropdown" style="font-weight: bold;font-size: 16px">
-							ROOMS
-						</a>
-						<div class="dropdown-menu" style="left: 20.5%;">
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/BedroomCatalogue')" style="color: black">Bedroom</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/LivingRoomCatalogue')" style="color: black">Living Room</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/KitchenCatalogue')" style="color: black">Kitchen</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/DiningRoomCatalogue')" style="color: black">Dining Room</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/WorkRoomCatalogue')" style="color: black">Work Room</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/BathRoomCatalogue')" style="color: black">Bath Room</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/KidsRoomCatalogue')" style="color: black">Kids Room</a>
-							<a class="drop-item" href="javascript:toAnotherPage('<?= base_url();?>Home/OutdoorCatalogue')" style="color: black">Outdoor</a>
-						</div>
-					</li><!--
-					<li class="nav-item">
-						<a class="nav-link link text-white" href="Home.html#header2-4" style="font-weight: bold;font-size: 16px">INSPIRATIONS</a>
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/BedroomCatalogue')" style="font-weight: bold;font-size: 16px">BEDROOM</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link link text-white" href="Home.html#header2-4" style="font-weight: bold;font-size: 16px">NEW LOWER PRICE</a>
-					</li>-->
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/LivingRoomCatalogue')" style="font-weight: bold;font-size: 16px">LIVINGROOM</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/KitchenCatalogue')" style="font-weight: bold;font-size: 16px">KITCHEN</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/DiningRoomCatalogue')" style="font-weight: bold;font-size: 16px">DININGROOM</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/WorkRoomCatalogue')" style="font-weight: bold;font-size: 16px">WORKROOM</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/BathRoomCatalogue')" style="font-weight: bold;font-size: 16px">BATHROOM</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/KidsRoomCatalogue')" style="font-weight: bold;font-size: 16px">KIDSROOM</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link link text-white" href="javascript:toAnotherPage('<?= base_url();?>Home/OutdoorCatalogue')" style="font-weight: bold;font-size: 16px">OUTDOOR</a>
+					</li>
 				</ul>
 				<form class="form-inline ml-auto" style="">
 			  		<input class="form-control-sm mr-sm-2 search-nav" type="search" placeholder="Search" aria-label="Search" style="background-color: transparent;border: 2px white solid;border-radius: 10px;color: white;height: 40px">
@@ -338,8 +338,7 @@
 											divTotalPrice.appendChild(totalCartPrice);
 											totalCartPrice.innerHTML = "Total Price: <b>"+formatter.format(totalPrice)+"</b>";
 										}else{
-											console.log("Gaa Ada!");
-											document.getElementById("cart-empty").style.display = "flex";
+											document.getElementById("cart-empty").style.display = "block";
 											document.getElementById("cart-avail").style.display = "none";
 										}
 									});

@@ -78,6 +78,8 @@
 					gallery_item.dataset.tags = child[i].productName;
 					gallery_item.setAttribute('name', child[i].productName);
 					gallery_item.id = "content-item-"+i;
+					gallery_item.style.width = "300px"
+					gallery_item.style.marginLeft = "20px"
 					var frame = document.createElement("div");
 
 					var img_src = document.createElement("img");
@@ -88,14 +90,16 @@
 					frame.appendChild(img_src);
 					frame.appendChild(item_focus);
 					frame.appendChild(product_title);
+					frame.style.height = "300px"
+					frame.style.width = "300px"
 					item_focus.className = "icon-focus";
 					product_title.className = "mbr-gallery-title mbr-fonts-style display-5";
 
 
 
 					img_src.src = child[i].productImage;
-					//img_src.style.height = "300px";
-					//img_src.style.width = "300px";
+					img_src.style.height = "300px";
+					img_src.style.width = "300px";
 
 					const formatter = new Intl.NumberFormat('en-US', {
 					  style: 'currency',

@@ -65,6 +65,7 @@
 			</div>
             <div class="col-3" style="float:right;">
 				<div style="text-align: center;font-size: 30px;font-weight: 500;margin-top: 80px">IDR <?= number_format($items->totalPrice,0,'.',','); ?></div>
+				<input type="number" value="<?= $items->totalPrice; ?>" id="price-<?= $i; ?>" style="display: none">
 			</div>
         </div>
 		<?php $totalPrice = $totalPrice + $items->totalPrice;$i = $i +1; endforeach; ?>
@@ -156,7 +157,8 @@
 					objCart['productCategory'] = document.getElementById("productName-"+y).dataset.tags;
 					objCart['amount'] = (document.getElementById("amount-"+y).innerHTML);
 					objCart['roomCategory'] = document.getElementById("productImage-"+y).dataset.tags;
-					objCart['price'] = document.getElementById("totalPrice").value;
+					objCart['price'] = document.getElementById("price-"+y).value;
+					objCart['totalprice'] = document.getElementById("totalPrice").value;
 					listObjCart.push(objCart);
 				}
 
